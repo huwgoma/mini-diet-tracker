@@ -2,6 +2,12 @@
 
 <h4><%= @date %></h4>
 
-<% @meals.each do |meal| %>
-  <%= "#{meal.memo} (#{meal.logged_at})" %>
-<% end %>
+<ul>
+  <% @meals.each do |meal| %>
+  <li>
+    <%= "#{meal.memo} (#{meal.logged_at})" %>
+    <%= "Calories: #{meal.calories} | Protein: #{meal.protein}"%>
+    <%= meal.foods %>
+  </li>
+  <% end %>
+</ul>

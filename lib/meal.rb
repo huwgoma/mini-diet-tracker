@@ -1,6 +1,6 @@
 class Meal
-  attr_reader :memo, :logged_at
-  
+  attr_reader :memo, :logged_at, :foods
+
   def initialize(id, memo, logged_at, foods, calories, protein)
     @id = id
     @memo = memo
@@ -10,4 +10,11 @@ class Meal
     @protein = protein
   end
 
+  def protein
+    "#{@protein}g"
+  end
+
+  def calories
+    "#{@calories} kcal"
+  end
 end
