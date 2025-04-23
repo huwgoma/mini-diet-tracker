@@ -38,8 +38,11 @@ VALUES ('Oat Milk',      DEFAULT, 48,   0.8),
 INSERT INTO meals(memo, logged_at)
 VALUES ('Breakfast', '2025-04-22 10:00AM'),
        ('Lunch',     '2025-04-22 13:00'),
-       ('Dinner',    '2025-04-22 19:36');
+       ('Dinner',    '2025-04-22 19:36'),
+       ('Breakfast', '2025-04-23 9:55AM');
 
 INSERT INTO meals_items (meal_id, food_id, serving_size)
 VALUES (1, 1, 235), (1, 3, 115),
-       (2, 2, 150), (2, 4, 200);
+       (2, 2, 150), (2, 4, 200),
+       (3, 4, 100), (3, 7, 100),
+       (4, 1, 235), (4, 3, 115);

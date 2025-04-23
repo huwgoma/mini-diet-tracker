@@ -24,8 +24,21 @@ before do
   @storage = DatabaseAdapter.new(logger)
 end
 
-# Home Page
-get '/' do
+not_found do
+  redirect '/dashboard/'
+end
+
+# Dashboard (Home Page)
+get '/dashboard/:date?' do
+  @date = params[:date] || Date.today.to_s
+  
+  # Optional Date
+  # - If not given, defaults to today
+  # Load the meals for the given day 
+  # - Then display: calories for date, protein for date 
+  #   Also: meals for date. For each meal:
+  #   - Memo, Time logged, food items, meal cals, meal protein
+  
   @meals = @storage.meals
 
   erb :home

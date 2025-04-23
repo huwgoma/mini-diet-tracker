@@ -4,4 +4,5 @@ class Meal
     @memo = memo
     @logged_at = logged_at
   end
+
 end
