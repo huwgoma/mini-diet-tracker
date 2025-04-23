@@ -44,21 +44,21 @@ end
 post '/meals' do
   if valid_meal?(params[:memo], params[:logged_at])
     meal = @storage.create_meal(params[:memo], params[:logged_at])
-    
-    # db creates new meal entry 
-    # how to pull id? 
+    session[:meal] = meal
     redirect "/meals/#{meal.id}"
-    # create meal
-    # redirect "meal/#{params meal_id}"
   else
     session[:error] = "Bad meal"
     erb :new_meal
   end
-  # Validate meal
-  # Create if valid 
-  # if not valid, re-render 
-  # If valid, create -> redirect to meal
-  # Where user can then add foods
+end
+
+# View a specific meal
+get '/meals/:meal_id' do
+  meal = session.delete(:meal) || @storage.find_meal(params[:meal_id])
+  binding.pry
+  # If redirecting from meal creation, pass the meal object through the redirect.
+  # otherwise, query for the meal via id.
+  erb :meal
 end
 
 
