@@ -31,16 +31,7 @@ end
 # Dashboard (Home Page)
 get '/dashboard' do
   @date = params[:date] || Date.today.to_s
-
   @meals = @storage.meals(@date)
-  
-  # Optional Date
-  # - If not given, defaults to today
-  # Load the meals for the given day 
-  # - Then display: calories for date, protein for date 
-  #   Also: meals for date. For each meal:
-  #   - Memo, Time logged, food items, meal cals, meal protein
-  
 
   erb :home
 end

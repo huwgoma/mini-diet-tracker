@@ -1,11 +1,9 @@
-<h1>Mini Diet Tracker</h1>
+<form action="/dashboard">
+  <input type="date" name="date" value=<%= @date %>>
+  <button type="submit">Confirm</button>
+</form>
 
-<h4>
-  <form action="/dashboard">
-    <input type="date" name="date" value=<%= @date %>>
-    <button type="submit">Confirm</button>
-  </form>
-</h4>
+<a href="">Record a Meal</a>
 
 <div>
   <% if @meals.empty? %>
