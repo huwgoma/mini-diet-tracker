@@ -1,7 +1,8 @@
 -- Reset
 DROP TABLE IF EXISTS meals CASCADE;
 DROP TABLE IF EXISTS foods CASCADE;
-DROP TABLE IF EXISTS meal_items;
+DROP TABLE IF EXISTS meals_items;
+DROP FUNCTION IF EXISTS adjusted_nutrition;
 
 -- Schema 
 CREATE TABLE meals (
@@ -13,17 +14,29 @@ CREATE TABLE meals (
 CREATE TABLE foods (
   id serial PRIMARY KEY, 
   name varchar(255) NOT NULL,
-  standard_portion integer NOT NULL DEFAULT 100, -- grams
-  calories numeric(10, 3) NOT NULL,
-  protein numeric(10, 3) NOT NULL
+  standard_portion numeric(10, 2) NOT NULL DEFAULT 100, -- grams
+  calories numeric(10, 2) NOT NULL,
+  protein numeric(10, 2) NOT NULL
 );
 
 CREATE TABLE meals_items (
   id serial PRIMARY KEY,
   meal_id integer NOT NULL REFERENCES meals ON DELETE CASCADE,
   food_id integer NOT NULL REFERENCES foods ON DELETE CASCADE,
-  serving_size integer NOT NULL
+  serving_size numeric(10, 2) NOT NULL
 );
+
+CREATE OR REPLACE FUNCTION adjusted_nutrition (
+  standard_nutrition numeric(10, 2),
+  serving_size numeric(10, 2), 
+  standard_portion numeric(10, 2) 
+)
+  RETURNS numeric(10, 2) AS $$
+    BEGIN
+      RETURN (standard_nutrition * (serving_size / standard_portion))::numeric(10, 2);
+    END;
+  $$ 
+LANGUAGE plpgsql;
 
 -- Test Data
 INSERT INTO foods (name, standard_portion, calories, protein)

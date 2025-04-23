@@ -3,5 +3,5 @@
 <h4><%= @date %></h4>
 
 <% @meals.each do |meal| %>
-  <%= meal %>
+  <%= "#{meal.memo} (#{meal.logged_at})" %>
 <% end %>
