@@ -30,13 +30,23 @@ class DatabaseAdapter
     meals.map { |meal| format_meal(meal) }
   end
 
+  def create_meal(memo, logged_at)
+    sql = "INSERT INTO meals (memo, logged_at)
+           VALUES($1, $2)
+           RETURNING *;"
+    result = query(sql, memo, logged_at)
+
+    format_meal(result.first)
+    # Insert a new record into MEALS and return the id of the newly created meal
+  end
+
   private
 
   def format_meal(meal)
     id = meal['id'].to_i
     memo = meal['memo']
     logged_at = meal['logged_at']
-    foods = meal['foods'].split(', ')
+    foods = meal['foods']
     calories = meal['calories'].to_f
     protein = meal['protein'].to_f
 
