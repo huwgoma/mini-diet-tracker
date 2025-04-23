@@ -1,13 +1,24 @@
 <h1>Mini Diet Tracker</h1>
 
-<h4><%= @date %></h4>
+<h4>
+  <form action="/dashboard">
+    <input type="date" name="date" value=<%= @date %>>
+    <button type="submit">Confirm</button>
+  </form>
+</h4>
 
-<ul>
-  <% @meals.each do |meal| %>
-  <li>
-    <%= "#{meal.memo} (#{meal.logged_at})" %>
-    <%= "Calories: #{meal.calories} | Protein: #{meal.protein}"%>
-    <%= meal.foods %>
-  </li>
+<div>
+  <% if @meals.empty? %>
+    <p>Hmm...You don't have any meals recorded for this day.</p>
+  <% else %>
+    <ul>
+    <% @meals.each do |meal| %>
+      <li>
+        <%= "#{meal.memo} (#{meal.logged_at})" %>
+        <%= "Calories: #{meal.calories} | Protein: #{meal.protein}"%>
+        <%= meal.foods %>
+      </li>
+    <% end %>
+    </ul>
   <% end %>
-</ul>
+</div>

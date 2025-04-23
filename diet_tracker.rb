@@ -25,11 +25,11 @@ before do
 end
 
 not_found do
-  redirect '/dashboard/'
+  redirect '/dashboard'
 end
 
 # Dashboard (Home Page)
-get '/dashboard/:date?' do
+get '/dashboard' do
   @date = params[:date] || Date.today.to_s
 
   @meals = @storage.meals(@date)
