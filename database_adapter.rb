@@ -13,16 +13,20 @@ class DatabaseAdapter
     db.exec_params(sql, params)
   end
 
-  def meals
-    sql = "SELECT * FROM meals;"
-    meals = query(sql)
+  def meals(date)
+    sql = "SELECT * FROM meals WHERE logged_at::date = $1;"
+    meals = query(sql, date)
 
-    meals.map do |meal|
-      id = meal['id'].to_i
-      memo = meal['memo']
-      logged_at = meal['logged_at']
+    meals.map { |meal| format_meal(meal) }
+  end
 
-      Meal.new(id, memo, logged_at)
-    end
+  private
+  
+  def format_meal(meal)
+    id = meal['id'].to_i
+    memo = meal['memo']
+    logged_at = meal['logged_at']
+
+    Meal.new(id, memo, logged_at)
   end
 end
