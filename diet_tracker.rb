@@ -11,6 +11,8 @@ require_relative 'lib/meal'
 configure do
   enable :sessions
   set :session_secret, SecureRandom.hex(32)
+
+  set :erb, :escape_html => true
 end
 
 configure(:development) do
@@ -22,9 +24,11 @@ before do
   @storage = DatabaseAdapter.new(logger)
 end
 
-# Display all meals
+# Home Page
 get '/' do
-  @storage.meals
+  @meals = @storage.meals
+
+  erb :home
 end
 
 
