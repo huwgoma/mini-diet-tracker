@@ -18,10 +18,10 @@ class DatabaseAdapter
     sql = <<~SQL
       SELECT meals.id, meals.memo, meals.logged_at, 
         STRING_AGG(foods.name, ', ') AS foods,
-        SUM(ADJUSTED_NUTRITION(foods.calories, meals_items.serving_size, foods.standard_portion)) AS calories,
-        SUM(ADJUSTED_NUTRITION(foods.protein, meals_items.serving_size, foods.standard_portion)) AS protein
+        SUM(ADJUSTED_NUTRITION(foods.calories, meal_items.serving_size, foods.standard_portion)) AS calories,
+        SUM(ADJUSTED_NUTRITION(foods.protein, meal_items.serving_size, foods.standard_portion)) AS protein
       FROM meals 
-        LEFT JOIN meals_items ON meals.id = meal_id
+        LEFT JOIN meal_items ON meals.id = meal_id
         LEFT JOIN foods       ON foods.id = food_id
       WHERE meals.logged_at::date = $1
       GROUP BY meals.id;
@@ -36,10 +36,10 @@ class DatabaseAdapter
     sql = <<~SQL
       SELECT meals.id, meals.memo, meals.logged_at, 
         STRING_AGG(foods.name, ', ') AS foods,
-        SUM(ADJUSTED_NUTRITION(foods.calories, meals_items.serving_size, foods.standard_portion)) AS calories,
-        SUM(ADJUSTED_NUTRITION(foods.protein, meals_items.serving_size, foods.standard_portion)) AS protein
+        SUM(ADJUSTED_NUTRITION(foods.calories, meal_items.serving_size, foods.standard_portion)) AS calories,
+        SUM(ADJUSTED_NUTRITION(foods.protein, meal_items.serving_size, foods.standard_portion)) AS protein
       FROM meals 
-        LEFT JOIN meals_items ON meals.id = meal_id
+        LEFT JOIN meal_items ON meals.id = meal_id
         LEFT JOIN foods       ON foods.id = food_id
       WHERE meals.id = $1
       GROUP BY meals.id;
@@ -47,6 +47,12 @@ class DatabaseAdapter
     result = query(sql, id)
 
     format_meal(result.first)
+  end
+
+  # Retrieve a list of all meal IDs
+  def meal_ids
+    result = query("SELECT id FROM meals;")
+    result.values.flatten.map(&:to_i)
   end
 
   # Insert new meal
@@ -67,9 +73,28 @@ class DatabaseAdapter
     result.map { |food| format_food(food) }
   end
 
+  # Retrieve a single food 
+  def find_food(id)
+    sql = "SELECT * FROM foods WHERE id = $1;"
+    result = query(sql, id)
+
+    format_food(result.first)
+  end
+
+  def meal_item_exists?(meal_id, food_id)
+    sql = "SELECT EXISTS 
+            (SELECT 1 FROM meal_items 
+             WHERE meal_id = $1 AND food_id = $2);"  
+    result = query(sql, meal_id, food_id)
+    
+    result.first['exists'] == 't'
+  end
+  
   private
 
   def format_meal(meal)
+    return if meal.nil?
+
     id = meal['id'].to_i
     memo = meal['memo']
     logged_at = meal['logged_at']
@@ -81,9 +106,11 @@ class DatabaseAdapter
   end
 
   def format_food(food)
+    return if food.nil?
+
     id = food['id'].to_i
     name = food['name']
-    
+
     Food.new(id, name)
   end
 end

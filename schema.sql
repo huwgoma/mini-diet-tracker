@@ -1,7 +1,7 @@
 -- Reset
 DROP TABLE IF EXISTS meals CASCADE;
 DROP TABLE IF EXISTS foods CASCADE;
-DROP TABLE IF EXISTS meals_items;
+DROP TABLE IF EXISTS meal_items;
 DROP FUNCTION IF EXISTS adjusted_nutrition;
 
 -- Schema 
@@ -15,15 +15,15 @@ CREATE TABLE foods (
   id serial PRIMARY KEY, 
   name varchar(255) NOT NULL,
   standard_portion numeric(10, 2) NOT NULL DEFAULT 100, -- grams
-  calories numeric(10, 2) NOT NULL,
-  protein numeric(10, 2) NOT NULL
+  calories numeric(10, 2) CHECK(calories > 0) NOT NULL,
+  protein numeric(10, 2) CHECK(protein > 0) NOT NULL
 );
 
-CREATE TABLE meals_items (
+CREATE TABLE meal_items (
   id serial PRIMARY KEY,
   meal_id integer NOT NULL REFERENCES meals ON DELETE CASCADE,
   food_id integer NOT NULL REFERENCES foods ON DELETE CASCADE,
-  serving_size numeric(10, 2) NOT NULL
+  serving_size numeric(10, 2) CHECK(serving_size > 0) NOT NULL
 );
 
 CREATE OR REPLACE FUNCTION adjusted_nutrition (
@@ -54,7 +54,7 @@ VALUES ('Breakfast', '2025-04-22 10:00AM'),
        ('Dinner',    '2025-04-22 19:36'),
        ('Breakfast', '2025-04-23 9:55AM');
 
-INSERT INTO meals_items (meal_id, food_id, serving_size)
+INSERT INTO meal_items (meal_id, food_id, serving_size)
 VALUES (1, 1, 235), (1, 3, 115),
        (2, 2, 150), (2, 4, 200),
        (3, 4, 100), (3, 7, 100),

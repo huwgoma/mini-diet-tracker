@@ -1,23 +1,21 @@
 <h4><%= @meal.memo %></h4>
 <p>Logged at: <%= @meal.logged_at %></p>
 
+<%# List of Foods %>
 <p><%= @meal.foods %></p>
 
-
+<%# Add a food %>
 <form action="/meals/<%= @meal.id %>/foods" method="post">
   <label for="foods">Add a food item:</label>
-  <%# Load all foods prior - @foods %>
-  <%# dropdown select (because i dont know how to implement a dropdown searchyet) %>
-  <select name="foods" id="foods">
+
+  <select name="food_id" id="foods">
     <% @foods.each do |food| %>
       <option value="<%= food.id %>"><%= food.name %></option>
     <% end %>
   </select>
 
-  <%# <input type="text" name="food" id="food"> %>
+  <label for="serving_size">Serving Size (g):</label>
+  <input type="number" name="serving_size" id="serving_size" min="1">
 
   <button type="Submit">Add</button>
 </form>
-<%# Meal: Display Time Logged, Description %>
-<%# total calories and protein %>
-<%# form for adding foods %>

@@ -6,6 +6,7 @@ class Meal
     @memo = memo
     @logged_at = logged_at
     @foods = foods.nil? ? [] : foods.split(', ')
+    # How to represent foods?
     @calories = calories
     @protein = protein
   end
