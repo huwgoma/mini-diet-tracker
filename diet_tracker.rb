@@ -54,9 +54,9 @@ end
 
 # View a specific meal
 get '/meals/:meal_id' do
-  meal = session.delete(:meal) || @storage.find_meal(params[:meal_id])
-  binding.pry
-  # If redirecting from meal creation, pass the meal object through the redirect.
+  @meal = session.delete(:meal) || @storage.find_meal(params[:meal_id])
+  @foods = @storage.load_food_names
+  # If redirecting from meal creation, pass the meal object through the redirect via sess
   # otherwise, query for the meal via id.
   erb :meal
 end

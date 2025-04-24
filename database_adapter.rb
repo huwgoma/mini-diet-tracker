@@ -59,6 +59,14 @@ class DatabaseAdapter
     format_meal(result.first)
   end
 
+  # Load all food names
+  def load_food_names
+    sql = "SELECT name FROM foods;"
+    result = query(sql)
+    
+    result.values.flatten
+  end
+
   private
 
   def format_meal(meal)
