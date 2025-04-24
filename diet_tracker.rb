@@ -6,7 +6,8 @@ require 'sinatra/contrib'
 require 'pry'
 
 require_relative 'database_adapter'
-require_relative 'lib/meal'
+require_relative 'lib/meal.rb'
+require_relative 'lib/food.rb'
 
 configure do
   enable :sessions
@@ -17,7 +18,7 @@ end
 
 configure(:development) do
   require 'sinatra/reloader'
-  also_reload 'database_adapter.rb', 'lib/meal.rb'
+  also_reload 'database_adapter.rb', 'lib/*.rb'
 end
 
 before do
@@ -55,8 +56,8 @@ end
 # View a specific meal
 get '/meals/:meal_id' do
   @meal = session.delete(:meal) || @storage.find_meal(params[:meal_id])
-  @foods = @storage.load_food_names
-  # If redirecting from meal creation, pass the meal object through the redirect via sess
+  @foods = @storage.foods
+    # If redirecting from meal creation, pass the meal object through the redirect via sess
   # otherwise, query for the meal via id.
   erb :meal
 end

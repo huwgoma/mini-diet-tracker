@@ -1,13 +1,16 @@
 <h4><%= @meal.memo %></h4>
 <p>Logged at: <%= @meal.logged_at %></p>
 
+<p><%= @meal.foods %></p>
+
+
 <form action="/meals/<%= @meal.id %>/foods" method="post">
   <label for="foods">Add a food item:</label>
   <%# Load all foods prior - @foods %>
   <%# dropdown select (because i dont know how to implement a dropdown searchyet) %>
   <select name="foods" id="foods">
     <% @foods.each do |food| %>
-      <option value="<%= food %>"><%= food %></option>
+      <option value="<%= food.id %>"><%= food.name %></option>
     <% end %>
   </select>
 

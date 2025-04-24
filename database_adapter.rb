@@ -59,12 +59,12 @@ class DatabaseAdapter
     format_meal(result.first)
   end
 
-  # Load all food names
-  def load_food_names
-    sql = "SELECT name FROM foods;"
+  # Retrieve all foods 
+  def foods
+    sql = "SELECT * FROM foods;"
     result = query(sql)
     
-    result.values.flatten
+    result.map { |food| format_food(food) }
   end
 
   private
@@ -78,5 +78,12 @@ class DatabaseAdapter
     protein = meal['protein'].to_f
 
     Meal.new(id, memo, logged_at, foods, calories, protein)
+  end
+
+  def format_food(food)
+    id = food['id'].to_i
+    name = food['name']
+    
+    Food.new(id, name)
   end
 end
