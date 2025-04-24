@@ -12,9 +12,11 @@
     <ul>
     <% @meals.each do |meal| %>
       <li>
-        <%= "#{meal.memo} (#{meal.logged_at})" %>
-        <%= "Calories: #{meal.calories} | Protein: #{meal.protein}"%>
-        <%= meal.foods %>
+        <a href="/meals/<%= meal.id %>">
+          <%= "#{meal.memo} (#{meal.logged_at})" %>
+          <%= "Calories: #{meal.calories} | Protein: #{meal.protein}"%>
+          <%= meal.foods %>
+        </a>
       </li>
     <% end %>
     </ul>

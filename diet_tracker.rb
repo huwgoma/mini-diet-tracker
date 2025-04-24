@@ -61,6 +61,14 @@ get '/meals/:meal_id' do
   erb :meal
 end
 
+# Add a food item to a meal
+post 'meals/:meal_id/foods' do
+  # How to insert records into meals_foods without food_id?
+  # Possible refactor:
+  # - Represent food items as Food objects.
+  # - That way the id is accessible within the application
+end
+
 
 ##################
 # Helper Methods #
