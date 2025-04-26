@@ -1,4 +1,8 @@
+require_relative 'nutrition_formatter.rb'
+
 class Meal
+  include NutritionFormatter
+
   attr_reader :id, :memo, :logged_at, :item_names, :items
 
   def initialize(id, memo, logged_at, calories, protein, item_names)
@@ -11,14 +15,6 @@ class Meal
     @items = []
   end
 
-  def protein
-    "#{@protein}g"
-  end
-
-  def calories
-    "#{@calories} kcal"
-  end
-
   def items=(meal_items)
     raise ArgumentError unless meal_items.all? { |item| item.is_a?(MealItem) }
 
@@ -26,7 +22,12 @@ class Meal
   end
 end
 
+# Meal Items
 class MealItem
+  include NutritionFormatter
+
+  attr_reader :name, :serving_size
+
   def initialize(food_id, name, serving__size, calories, protein)
     @food_id = food_id
     @name = name

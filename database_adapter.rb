@@ -78,7 +78,7 @@ class DatabaseAdapter
   end
 
   # Retrieve all foods 
-  def foods
+  def load_foods
     sql = "SELECT * FROM foods;"
     result = query(sql)
     
@@ -120,7 +120,7 @@ class DatabaseAdapter
 
   def format_meal_item(item)
     return if item.nil?
-    
+
     food_id = item['food_id'].to_i
     name = item['name']
     serving_size = item['serving_size'].to_f

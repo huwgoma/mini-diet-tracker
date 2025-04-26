@@ -55,10 +55,11 @@ end
 # View a specific meal
 get '/meals/:meal_id' do
   @meal = session.delete(:meal) || @storage.load_meal(params[:meal_id])
-
   @meal.items = @storage.load_meal_items(params[:meal_id])
-  binding.pry
-  
+
+  @food_list = @storage.load_foods
+
+
   erb :meal
 end
 

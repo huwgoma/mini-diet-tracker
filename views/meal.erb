@@ -1,6 +1,9 @@
 <h4><%= @meal.memo %></h4>
 <p>Logged at: <%= @meal.logged_at %></p>
 
+<%# Totals %>
+<p>Totals: <%= @meal.calories %>, <%= @meal.protein %></p>
+
 <%# List of Foods %>
 <ul>
   <% @meal.items.each do |meal_item| %>
@@ -16,7 +19,7 @@
   <label for="foods">Add a food item:</label>
 
   <select name="food_id" id="foods">
-    <% @foods.each do |food| %>
+    <% @food_list.each do |food| %>
       <option value="<%= food.id %>"><%= food.name %></option>
     <% end %>
   </select>
