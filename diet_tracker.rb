@@ -6,7 +6,7 @@ require 'sinatra/contrib'
 require 'pry'
 
 require_relative 'database_adapter'
-require_relative 'lib/meal.rb'
+Dir.glob('lib/*.rb').each { |file| require_relative file }
 
 configure do
   enable :sessions
