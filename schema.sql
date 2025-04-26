@@ -26,14 +26,14 @@ CREATE TABLE meal_items (
   serving_size numeric(10, 2) CHECK(serving_size > 0) NOT NULL
 );
 
-CREATE OR REPLACE FUNCTION adjusted_nutrition (
-  standard_nutrition numeric(10, 2),
+CREATE OR REPLACE FUNCTION ADJUST (
+  nutritional_value numeric(10, 2),
   serving_size numeric(10, 2), 
   standard_portion numeric(10, 2) 
 )
   RETURNS numeric(10, 2) AS $$
     BEGIN
-      RETURN (standard_nutrition * (serving_size / standard_portion))::numeric(10, 2);
+      RETURN (nutritional_value * (serving_size / standard_portion))::numeric(10, 2);
     END;
   $$ 
 LANGUAGE plpgsql;
@@ -49,13 +49,11 @@ VALUES ('Oat Milk',      DEFAULT, 48,   0.8),
        ('Sweet Potato',  DEFAULT, 77,   1.58);
 
 INSERT INTO meals(memo, logged_at)
-VALUES ('Breakfast', '2025-04-22 10:00AM'),
-       ('Lunch',     '2025-04-22 13:00'),
-       ('Dinner',    '2025-04-22 19:36'),
-       ('Breakfast', '2025-04-23 9:55AM');
+VALUES ('Breakfast', DEFAULT),
+       ('Lunch',     DEFAULT),
+       ('Dinner',    DEFAULT);
 
 INSERT INTO meal_items (meal_id, food_id, serving_size)
 VALUES (1, 1, 235), (1, 3, 115),
        (2, 2, 150), (2, 4, 200),
-       (3, 4, 100), (3, 7, 100),
-       (4, 1, 235), (4, 3, 115);
+       (3, 4, 100), (3, 7, 100);

@@ -1,14 +1,12 @@
 class Meal
-  attr_reader :id, :memo, :logged_at, :foods
+  attr_reader :id, :memo, :logged_at, :item_names
 
-  def initialize(id, memo, logged_at, foods, calories, protein)
-    @id = id
-    @memo = memo
-    @logged_at = logged_at
-    @foods = foods.nil? ? [] : foods.split(', ')
-    # How to represent foods?
-    @calories = calories
-    @protein = protein
+  def initialize(id, memo, logged_at, 
+                 calories, protein, item_names)
+    @id, @memo, @logged_at = id, memo, logged_at
+    @calories, @protein = calories, protein
+
+    @item_names = item_names
   end
 
   def protein

@@ -56,6 +56,7 @@ end
 # View a specific meal
 get '/meals/:meal_id' do
   @meal = session.delete(:meal) || @storage.find_meal(params[:meal_id])
+  # @meal.items << @storage.load_meal_items(meal_id)
   @foods = @storage.foods
 
   erb :meal

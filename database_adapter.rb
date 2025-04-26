@@ -17,9 +17,9 @@ class DatabaseAdapter
   def meals(date)
     sql = <<~SQL
       SELECT meals.id, meals.memo, meals.logged_at, 
-        STRING_AGG(foods.name, ', ') AS foods,
-        SUM(ADJUSTED_NUTRITION(foods.calories, meal_items.serving_size, foods.standard_portion)) AS calories,
-        SUM(ADJUSTED_NUTRITION(foods.protein, meal_items.serving_size, foods.standard_portion)) AS protein
+        STRING_AGG(foods.name, ', ') AS meal_item_names,
+        SUM(ADJUST(calories, serving_size, standard_portion)) AS total_calories,
+        SUM(ADJUST(protein, serving_size, standard_portion)) AS total_protein
       FROM meals 
         LEFT JOIN meal_items ON meals.id = meal_id
         LEFT JOIN foods       ON foods.id = food_id
@@ -98,14 +98,21 @@ class DatabaseAdapter
     id = meal['id'].to_i
     memo = meal['memo']
     logged_at = meal['logged_at']
-    foods = meal['foods']
-    calories = meal['calories'].to_f
-    protein = meal['protein'].to_f
+    total_calories = meal['total_calories'].to_f
+    total_protein = meal['total_protein'].to_f
+    meal_item_names = meal['meal_item_names']
 
-    Meal.new(id, memo, logged_at, foods, calories, protein)
+    Meal.new(id, memo, logged_at, 
+             total_calories, total_protein, meal_item_names)
   end
 
   def format_food(food)
+    # format_meal_item
+    # id = item[food_id], name = item[food_name]
+    # serving size, item_calories, item_protein,
+    # 
+    # 
+    #
     return if food.nil?
 
     id = food['id'].to_i
