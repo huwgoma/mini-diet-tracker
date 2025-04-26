@@ -14,7 +14,7 @@ class DatabaseAdapter
   end
 
   # Retrieve all meals by date
-  def meals(date)
+  def load_meals(date)
     sql = <<~SQL
       SELECT meals.id, meals.memo, meals.logged_at, 
         STRING_AGG(foods.name, ', ') AS meal_item_names,
@@ -32,21 +32,33 @@ class DatabaseAdapter
   end
 
   # Retrieve single meal by ID
-  def find_meal(id)
+  def load_meal(id)
     sql = <<~SQL
       SELECT meals.id, meals.memo, meals.logged_at, 
-        STRING_AGG(foods.name, ', ') AS foods,
-        SUM(ADJUSTED_NUTRITION(foods.calories, meal_items.serving_size, foods.standard_portion)) AS calories,
-        SUM(ADJUSTED_NUTRITION(foods.protein, meal_items.serving_size, foods.standard_portion)) AS protein
+        STRING_AGG(foods.name, ', ') AS meal_item_names,
+        SUM(ADJUST(calories, serving_size, standard_portion)) AS total_calories,
+        SUM(ADJUST(protein, serving_size, standard_portion)) AS total_protein
       FROM meals 
         LEFT JOIN meal_items ON meals.id = meal_id
-        LEFT JOIN foods       ON foods.id = food_id
+        LEFT JOIN foods      ON foods.id = food_id
       WHERE meals.id = $1
       GROUP BY meals.id;
     SQL
     result = query(sql, id)
 
     format_meal(result.first)
+  end
+
+  def load_meal_items(meal_id)
+    sql = "SELECT foods.id AS food_id, foods.name, meal_items.serving_size,
+           ADJUST(calories, serving_size, standard_portion) AS item_calories,
+           ADJUST(protein, serving_size, standard_portion) AS item_protein
+           FROM foods 
+           JOIN meal_items ON foods.id = food_id
+           WHERE meal_id = $1"
+    result = query(sql, meal_id)
+
+    result.map { |item| format_meal_item(item) }
   end
 
   # Retrieve a list of all meal IDs
@@ -98,26 +110,23 @@ class DatabaseAdapter
     id = meal['id'].to_i
     memo = meal['memo']
     logged_at = meal['logged_at']
-    total_calories = meal['total_calories'].to_f
-    total_protein = meal['total_protein'].to_f
+    calories = meal['total_calories'].to_f
+    protein = meal['total_protein'].to_f
     meal_item_names = meal['meal_item_names']
 
     Meal.new(id, memo, logged_at, 
-             total_calories, total_protein, meal_item_names)
+             calories, protein, meal_item_names)
   end
 
-  def format_food(food)
-    # format_meal_item
-    # id = item[food_id], name = item[food_name]
-    # serving size, item_calories, item_protein,
-    # 
-    # 
-    #
-    return if food.nil?
+  def format_meal_item(item)
+    return if item.nil?
+    
+    food_id = item['food_id'].to_i
+    name = item['name']
+    serving_size = item['serving_size'].to_f
+    calories = item['item_calories'].to_f
+    protein = item['item_protein'].to_f
 
-    id = food['id'].to_i
-    name = food['name']
-
-    Food.new(id, name)
+    MealItem.new(food_id, name, serving_size, calories, protein)
   end
 end

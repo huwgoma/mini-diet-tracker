@@ -2,7 +2,14 @@
 <p>Logged at: <%= @meal.logged_at %></p>
 
 <%# List of Foods %>
-<p><%= @meal.foods %></p>
+<ul>
+  <% @meal.items.each do |meal_item| %>
+    <li>
+      <%= meal_item.name %>(<%= meal_item.serving_size %>): 
+      <%= meal_item.calories %>, <%= meal_item.protein %>
+    </li>
+  <% end %>
+</ul>
 
 <%# Add a food %>
 <form action="/meals/<%= @meal.id %>/foods" method="post">

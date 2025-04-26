@@ -7,7 +7,6 @@ require 'pry'
 
 require_relative 'database_adapter'
 require_relative 'lib/meal.rb'
-require_relative 'lib/food.rb'
 
 configure do
   enable :sessions
@@ -32,7 +31,7 @@ end
 # Dashboard (Home Page)
 get '/dashboard' do
   @date = params[:date] || Date.today.to_s
-  @meals = @storage.meals(@date)
+  @meals = @storage.load_meals(@date)
 
   erb :home
 end
@@ -55,10 +54,11 @@ end
 
 # View a specific meal
 get '/meals/:meal_id' do
-  @meal = session.delete(:meal) || @storage.find_meal(params[:meal_id])
-  # @meal.items << @storage.load_meal_items(meal_id)
-  @foods = @storage.foods
+  @meal = session.delete(:meal) || @storage.load_meal(params[:meal_id])
 
+  @meal.items = @storage.load_meal_items(params[:meal_id])
+  binding.pry
+  
   erb :meal
 end
 
@@ -91,7 +91,7 @@ end
 
 def valid_meal_item?(meal_id, food_id, serving_size)
   serving_size.positive? &&
-    @storage.find_meal(meal_id) &&
+    @storage.load_meal(meal_id) &&
     @storage.find_food(food_id) &&
     !@storage.meal_item_exists?(meal_id, food_id)
 end
