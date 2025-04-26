@@ -49,6 +49,7 @@ class DatabaseAdapter
     format_meal(result.first)
   end
 
+  # Retrieve all meal items associated with the given meal ID
   def load_meal_items(meal_id)
     sql = "SELECT foods.id AS food_id, foods.name, meal_items.serving_size,
            ADJUST(calories, serving_size, standard_portion) AS item_calories,
@@ -61,6 +62,8 @@ class DatabaseAdapter
     result.map { |item| format_meal_item(item) }
   end
 
+
+  # ???
   # Retrieve a list of all meal IDs
   def meal_ids
     result = query("SELECT id FROM meals;")
@@ -128,5 +131,12 @@ class DatabaseAdapter
     protein = item['item_protein'].to_f
 
     MealItem.new(food_id, name, serving_size, calories, protein)
+  end
+
+  def format_food(food)
+    id = food['id'].to_i
+    name = food['name']
+
+    Food.new(id, name)
   end
 end
