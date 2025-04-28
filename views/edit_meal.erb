@@ -1,0 +1,14 @@
+<form action="/meals/<%= @meal.id %>/edit" method="post">
+  <h2>Editing <%= @meal.memo %>:</h2>
+  <div>
+    <label for="memo">Memo:</label>
+    <input type="text" name="memo" id="memo" value=<%= @meal.memo %>>
+  </div>
+  
+  <div>
+    <label for="logged_at">Date/Time:</label>
+    <input type="datetime-local" name="logged_at" id="logged_at" 
+      value=<%= "#{@meal.date}T#{@meal.time}" %> >
+  </div>
+  <button type="submit">Update</button>
+</form>

@@ -1,4 +1,5 @@
 require 'pg'
+require 'date_core'
 
 class DatabaseAdapter
   attr_reader :db, :logger
@@ -89,12 +90,7 @@ class DatabaseAdapter
   end
 
 
-  # ???
-  # Retrieve a list of all meal IDs
-  # def meal_ids
-  #   result = query("SELECT id FROM meals;")
-  #   result.values.flatten.map(&:to_i)
-  # end
+
 
   # Insert new meal
   def create_meal(memo, logged_at)
@@ -122,15 +118,6 @@ class DatabaseAdapter
     format_food(result.first)
   end
 
-  # def meal_item_exists?(meal_id, food_id)
-  #   sql = "SELECT EXISTS 
-  #           (SELECT 1 FROM meal_items 
-  #            WHERE meal_id = $1 AND food_id = $2);"  
-  #   result = query(sql, meal_id, food_id)
-    
-  #   result.first['exists'] == 't'
-  # end
-  
   private
 
   def format_meal(meal)
@@ -138,13 +125,17 @@ class DatabaseAdapter
 
     id = meal['id'].to_i
     memo = meal['memo']
-    logged_at = meal['logged_at']
+    logged_at = format_datetime(meal['logged_at'])
     calories = meal['total_calories'].to_f
     protein = meal['total_protein'].to_f
     meal_item_names = meal['meal_item_names']
 
     Meal.new(id, memo, logged_at, 
              calories, protein, meal_item_names)
+  end
+
+  def format_datetime(datetime)
+    DateTime.parse(datetime)
   end
 
   def format_meal_item(item)

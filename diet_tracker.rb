@@ -64,7 +64,14 @@ end
 
 # Edit an individual meal
 get '/meals/:meal_id/edit' do
-  
+  @meal = @storage.load_meal(params[:meal_id])
+  @meal.items = @storage.load_meal_items(params[:meal_id])
+
+  erb :edit_meal
+end
+
+post '/meals/:meal_id/edit' do
+  binding.pry
 end
 
 # Add a food item to a meal
