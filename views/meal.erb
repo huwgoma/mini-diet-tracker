@@ -1,8 +1,12 @@
-<h4><%= @meal.memo %></h4>
-<p>Logged at: <%= @meal.logged_at %></p>
+<h3><%= @meal.memo %></h3>
+<div>
+  <a href="/meals/<%= @meal.id %>/edit">Edit</a>
+  <button>Delete</button>
+</div>
+<div>Logged at: <%= @meal.logged_at %></div>
 
 <%# Totals %>
-<p>Totals: <%= @meal.calories %>, <%= @meal.protein %></p>
+<div>Totals: <%= @meal.calories %>, <%= @meal.protein %></div>
 
 <%# List of Foods %>
 <ul>

@@ -62,6 +62,11 @@ get '/meals/:meal_id' do
   erb :meal
 end
 
+# Edit an individual meal
+get '/meals/:meal_id/edit' do
+  
+end
+
 # Add a food item to a meal
 post '/meals/:meal_id/foods' do
   meal_id = params[:meal_id].to_i
