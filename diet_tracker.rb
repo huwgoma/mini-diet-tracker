@@ -42,13 +42,16 @@ get '/meals/new' do
 end
 
 post '/meals' do
-  if valid_meal?(params[:memo], params[:logged_at])
-    meal = @storage.create_meal(params[:memo], params[:logged_at])
+  memo, logged_at = params[:memo], params[:logged_at]
+
+  session[:error] = meal_error(memo, logged_at)
+
+  if session[:error]
+    erb :new_meal
+  else 
+    meal = @storage.create_and_return_meal(memo, logged_at)
     session[:meal] = meal
     redirect "/meals/#{meal.id}"
-  else
-    session[:error] = "Bad meal"
-    erb :new_meal
   end
 end
 
@@ -97,8 +100,12 @@ end
 ##################
 
 ## Validation Methods
-def valid_meal?(memo, logged_at)
-  memo.size > 0 && logged_at.size > 0
+def meal_error(memo, logged_at)
+  if memo.strip.empty?
+    'Memo (description) cannot be empty.'
+  elsif logged_at.strip.empty?
+    'You must provide a log time for this meal.'
+  end
 end
 
 def meal_item_error(meal_id, food_id, serving_size)

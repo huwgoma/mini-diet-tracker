@@ -93,7 +93,7 @@ class DatabaseAdapter
 
 
   # Insert new meal
-  def create_meal(memo, logged_at)
+  def create_and_return_meal(memo, logged_at)
     sql = "INSERT INTO meals (memo, logged_at)
            VALUES($1, $2)
            RETURNING *;"
