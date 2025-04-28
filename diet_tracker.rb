@@ -59,7 +59,6 @@ get '/meals/:meal_id' do
 
   @food_list = @storage.load_foods
 
-
   erb :meal
 end
 
@@ -77,6 +76,7 @@ post '/meals/:meal_id/foods' do
   end
 
   redirect "/meals/#{meal_id}"
+  # refactor how to select meal items into a search bar
 end
 
 

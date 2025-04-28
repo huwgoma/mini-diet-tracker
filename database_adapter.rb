@@ -82,6 +82,11 @@ class DatabaseAdapter
     result.first['exists'] == 't'
   end
 
+  def create_meal_item(meal_id, food_id, serving_size)
+    sql = "INSERT INTO meal_items (meal_id, food_id, serving_size)
+           VALUES($1, $2, $3)"
+    query(sql, meal_id, food_id, serving_size)
+  end
 
 
   # ???

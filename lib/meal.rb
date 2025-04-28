@@ -34,4 +34,6 @@ class MealItem
     @serving_size = serving__size
     @calories, @protein = calories, protein
   end
+
+  # serving size format
 end
