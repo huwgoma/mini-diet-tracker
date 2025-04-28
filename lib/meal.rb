@@ -28,12 +28,14 @@ class MealItem
 
   attr_reader :name, :serving_size
 
-  def initialize(food_id, name, serving__size, calories, protein)
+  def initialize(food_id, name, serving_size, calories, protein)
     @food_id = food_id
     @name = name
-    @serving_size = serving__size
+    @serving_size = serving_size
     @calories, @protein = calories, protein
   end
 
-  # serving size format
+  def serving_size
+    grams(@serving_size)
+  end
 end

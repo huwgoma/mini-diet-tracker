@@ -1,9 +1,13 @@
 module NutritionFormatter
-  def calories
-    "#{@calories}kcal"  
+  def grams(value)
+    "#{value}g"  
   end
 
   def protein
-    "#{@protein}g Protein"
+    "#{grams(@protein)} Protein"   
+  end
+
+  def calories
+    "#{@calories}kcal"  
   end
 end
