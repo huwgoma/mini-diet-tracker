@@ -69,30 +69,49 @@ post '/meals/:meal_id/foods' do
   food_id = params[:food_id].to_i
   serving_size = params[:serving_size].to_i
 
-  if valid_meal_item?(meal_id, food_id, serving_size)
-    @storage.add_food_to_meal(meal_id, food_id, serving_size)
-    binding.pry
-    # insert new record into meals_items
-    # success!
-    # redirect to same meal page 
-  else
-    # error!
-    # re-render same meal page.
+  session[:error] = meal_item_error(meal_id, food_id, serving_size)
+
+  unless session[:error]
+    # success message
+    @storage.create_meal_item(meal_id, food_id, serving_size)
   end
 
+  redirect "/meals/#{meal_id}"
 end
 
 
 ##################
 # Helper Methods #
 ##################
+
+## Validation Methods
 def valid_meal?(memo, logged_at)
   memo.size > 0 && logged_at.size > 0
 end
 
-def valid_meal_item?(meal_id, food_id, serving_size)
-  serving_size.positive? &&
-    @storage.load_meal(meal_id) &&
-    @storage.find_food(food_id) &&
-    !@storage.meal_item_exists?(meal_id, food_id)
+def meal_item_error(meal_id, food_id, serving_size)
+  if serving_size <= 0
+    "Serving size must be greater than 0."
+  elsif duplicate_meal_item?(meal_id, food_id)
+    <<~HEREDOC
+      You can't add the same food item twice to a meal.
+      Try editing the existing food entry instead.
+    HEREDOC
+  elsif null_meal?(meal_id)
+    "That meal (id = #{meal_id}) was not found."
+  elsif null_food?(food_id)
+    "That food (id = #{food_id}) was not found. Try adding it to the database."
+  end
+end
+
+def duplicate_meal_item?(meal_id, food_id)
+  @storage.meal_item_exists?(meal_id, food_id)
+end
+
+def null_meal?(meal_id)
+  !@storage.load_meal(meal_id)
+end
+
+def null_food?(food_id)
+  !@storage.load_food(food_id)
 end

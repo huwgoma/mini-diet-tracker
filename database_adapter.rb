@@ -13,6 +13,7 @@ class DatabaseAdapter
     db.exec_params(sql, params)
   end
 
+  # # # # # # # Meals # # # # # # #
   # Retrieve all meals by date
   def load_meals(date)
     sql = <<~SQL
@@ -62,13 +63,33 @@ class DatabaseAdapter
     result.map { |item| format_meal_item(item) }
   end
 
+  # # # # # # # Foods # # # # # # #
+  def load_food(food_id)
+    sql = "SELECT * FROM foods WHERE id = $1"
+    query(sql, food_id)
+    # format_food 
+  end
+
+  # # # # # # # Meal Items # # # # # 
+  # Query the existence of a meal_item record
+  def meal_item_exists?(meal_id, food_id)
+    sql = "SELECT EXISTS (
+            SELECT 1 FROM meal_items
+            WHERE meal_id = $1 AND food_id = $2
+          );"
+    result = query(sql, meal_id, food_id)
+
+    result.first['exists'] == 't'
+  end
+
+
 
   # ???
   # Retrieve a list of all meal IDs
-  def meal_ids
-    result = query("SELECT id FROM meals;")
-    result.values.flatten.map(&:to_i)
-  end
+  # def meal_ids
+  #   result = query("SELECT id FROM meals;")
+  #   result.values.flatten.map(&:to_i)
+  # end
 
   # Insert new meal
   def create_meal(memo, logged_at)
@@ -96,14 +117,14 @@ class DatabaseAdapter
     format_food(result.first)
   end
 
-  def meal_item_exists?(meal_id, food_id)
-    sql = "SELECT EXISTS 
-            (SELECT 1 FROM meal_items 
-             WHERE meal_id = $1 AND food_id = $2);"  
-    result = query(sql, meal_id, food_id)
+  # def meal_item_exists?(meal_id, food_id)
+  #   sql = "SELECT EXISTS 
+  #           (SELECT 1 FROM meal_items 
+  #            WHERE meal_id = $1 AND food_id = $2);"  
+  #   result = query(sql, meal_id, food_id)
     
-    result.first['exists'] == 't'
-  end
+  #   result.first['exists'] == 't'
+  # end
   
   private
 

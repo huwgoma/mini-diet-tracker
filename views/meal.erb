@@ -20,7 +20,9 @@
 
   <select name="food_id" id="foods">
     <% @food_list.each do |food| %>
-      <option value="<%= food.id %>"><%= food.name %></option>
+      <option value="<%= food.id %>">
+        <%= food.name %>
+      </option>
     <% end %>
   </select>
 
