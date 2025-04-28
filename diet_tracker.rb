@@ -77,14 +77,16 @@ post '/meals/:meal_id/edit' do
   meal_id = params[:meal_id].to_i
   memo, logged_at = params[:memo], params[:logged_at]
 
-  session[:error] = meal_update_error()
-  
-  
-  # Validate the updated meal details
-  # memo is present
-  # logged at is present
-  # meal exists
-  # @storage.update_meal(meal_id, memo, logged_at)
+  session[:error] = meal_update_error(memo, logged_at, meal_id)
+
+  if session[:error]
+    @meal = @storage.load_meal(meal_id)
+
+    erb :edit_meal
+  else
+    @storage.update_meal(meal_id, memo, logged_at)
+    redirect "/meals/#{meal_id}"
+  end
 end
 
 # Add a food item to a meal
@@ -114,18 +116,13 @@ def meal_data_error(memo, logged_at)
   if memo.strip.empty?
     'Memo (description) cannot be empty.'
   elsif logged_at.strip.empty?
-    'You must provide a log time for this meal.'
+    'You must provide a date and time for this meal.'
   end
 end
 
 def meal_update_error(memo, logged_at, meal_id)
-  #meal_data_error || null_meal_error(meal_id)
-
-  # meal exists 
-  # and memo/logged at not null
+  meal_data_error(memo, logged_at) || null_meal_error(meal_id)
 end
-
-
 
 def meal_item_error(meal_id, food_id, serving_size)
   serving_size_error(serving_size) ||

@@ -51,6 +51,24 @@ class DatabaseAdapter
     format_meal(result.first)
   end
 
+   # Insert new meal
+  def create_and_return_meal(memo, logged_at)
+    sql = "INSERT INTO meals (memo, logged_at)
+           VALUES($1, $2)
+           RETURNING *;"
+    result = query(sql, memo, logged_at)
+
+    format_meal(result.first)
+  end
+
+  # Update existing meal
+  def update_meal(id, memo, logged_at)
+    sql = "UPDATE meals SET
+           memo = $2, logged_at = $3
+           WHERE id = $1"
+    query(sql, id, memo, logged_at)
+  end
+
   # Retrieve all meal items associated with the given meal ID
   def load_meal_items(meal_id)
     sql = "SELECT foods.id AS food_id, foods.name, meal_items.serving_size,
@@ -92,15 +110,7 @@ class DatabaseAdapter
 
 
 
-  # Insert new meal
-  def create_and_return_meal(memo, logged_at)
-    sql = "INSERT INTO meals (memo, logged_at)
-           VALUES($1, $2)
-           RETURNING *;"
-    result = query(sql, memo, logged_at)
-
-    format_meal(result.first)
-  end
+ 
 
   # Retrieve all foods 
   def load_foods
