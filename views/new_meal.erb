@@ -2,12 +2,15 @@
   <h2>Record a new meal:</h2>
   <div>
     <label for="memo">Memo:</label>
-    <input type="text" name="memo" id="memo" placeholder="Breakfast/Lunch/Dinner/etc.">
+    <input type="text" name="memo" id="memo" 
+      placeholder="Breakfast/Lunch/Dinner/etc." 
+      value=<%= params[:memo]%>>
   </div>
   
   <div>
     <label for="logged_at">Date/Time:</label>
-    <input type="datetime-local" name="logged_at" id="logged_at">
+    <input type="datetime-local" name="logged_at" id="logged_at"
+      value=<%= params[:logged_at] %>>
   </div>
   <button type="submit">Submit</button>
 </form>
