@@ -65,8 +65,13 @@ class DatabaseAdapter
   def update_meal(id, memo, logged_at)
     sql = "UPDATE meals SET
            memo = $2, logged_at = $3
-           WHERE id = $1"
+           WHERE id = $1;"
     query(sql, id, memo, logged_at)
+  end
+
+  def delete_meal(id)
+    sql = "DELETE FROM meals WHERE id = $1;"
+    query(sql, id)
   end
 
   # Retrieve all meal items associated with the given meal ID

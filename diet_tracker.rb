@@ -90,7 +90,13 @@ post '/meals/:meal_id/edit' do
 end
 
 # Delete a meal
-
+post '/meals/:meal_id/delete' do
+  # Add confirmation prompt via javascript
+  @storage.delete_meal(params[:meal_id])
+  session[:success] = "Meal successfully deleted."
+  
+  redirect "/dashboard"
+end
 
 # Add a food item to a meal
 post '/meals/:meal_id/foods' do

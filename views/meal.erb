@@ -1,7 +1,10 @@
 <h3><%= @meal.memo %></h3>
 <div>
   <a href="/meals/<%= @meal.id %>/edit">Edit</a>
-  <button>Delete</button>
+
+  <form action="/meals/<%= @meal.id%>/delete" method="post">
+    <button type="submit">Delete</button>
+  </form>
 </div>
 <div>Logged at: <%= @meal.datetime %></div>
 

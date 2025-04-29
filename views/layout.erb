@@ -8,6 +8,10 @@
   <header>
     <h1>Mini Diet Tracker</h1>
 
+    <% if session[:success] %>
+      <div><%= session.delete(:success) %></div>
+    <% end %>
+
     <% if session[:error] %>
       <div><%= session.delete(:error) %></div>
     <% end %>
