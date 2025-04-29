@@ -36,6 +36,7 @@ get '/dashboard' do
   erb :home
 end
 
+# # # # # # Meals # # # # # 
 # Create a new meal
 get '/meals/new' do
   erb :new_meal

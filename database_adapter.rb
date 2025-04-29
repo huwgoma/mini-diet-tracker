@@ -76,9 +76,10 @@ class DatabaseAdapter
 
   # Retrieve all meal items associated with the given meal ID
   def load_meal_items(meal_id)
-    sql = "SELECT foods.id AS food_id, foods.name, meal_items.serving_size,
-           ADJUST(calories, serving_size, standard_portion) AS item_calories,
-           ADJUST(protein, serving_size, standard_portion) AS item_protein
+    sql = "SELECT meal_items.id, foods.id AS food_id, foods.name, 
+            meal_items.serving_size,
+            ADJUST(calories, serving_size, standard_portion) AS item_calories,
+            ADJUST(protein, serving_size, standard_portion) AS item_protein
            FROM foods 
            JOIN meal_items ON foods.id = food_id
            WHERE meal_id = $1"
@@ -156,13 +157,14 @@ class DatabaseAdapter
   def format_meal_item(item)
     return if item.nil?
 
+    id = item['id'].to_i
     food_id = item['food_id'].to_i
     name = item['name']
     serving_size = item['serving_size'].to_f
     calories = item['item_calories'].to_f
     protein = item['item_protein'].to_f
 
-    MealItem.new(food_id, name, serving_size, calories, protein)
+    MealItem.new(id, food_id, name, serving_size, calories, protein)
   end
 
   def format_food(food)

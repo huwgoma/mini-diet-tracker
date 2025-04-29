@@ -15,6 +15,7 @@ class Meal
     @items = []
   end
 
+  # Extract to view helpers
   def datetime
     "#{date} #{time}"
   end
@@ -44,16 +45,16 @@ end
 class MealItem
   include NutritionFormatter
 
-  attr_reader :name, :serving_size
+  attr_reader :id, :food_id, :name, :serving_size
 
-  def initialize(food_id, name, serving_size, calories, protein)
-    @food_id = food_id
+  def initialize(id, food_id, name, serving_size, calories, protein)
+    @id, @food_id = id, food_id
     @name = name
     @serving_size = serving_size
     @calories, @protein = calories, protein
   end
 
-  def serving_size
+  def serving_size_display
     grams(@serving_size)
   end
 end
