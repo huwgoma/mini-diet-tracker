@@ -11,13 +11,33 @@
 <%# Totals %>
 <div>Totals: <%= @meal.calories %>, <%= @meal.protein %></div>
 
-<%# List of Foods %>
+<%# List of Meal Items %>
 <ul>
   <% @meal.items.each do |meal_item| %>
     <li>
-      <%= meal_item.name %>(<%= meal_item.serving_size %>): 
-      <%= meal_item.calories %>, <%= meal_item.protein %>
+      <% if meal_item.id == @item_id %>
+        <form action="/meals/<%= @meal.id %>/items/<%= meal_item.id %>/edit" method="post">
+          <select name="food_id" id="foods">
+            <% @food_list.each do |food| %>
+              <option value="<%= food.id %>" <%= "selected" if meal_item.food_id == food.id %>>
+                <%= food.name %>
+              </option>
+            <% end %>
+          </select>
+
+          <input type="number" name="serving_size" id="serving_size" 
+            min="1" value=<%= meal_item.serving_size.to_i %>>
+
+          <button type="submit">Update</button>
+        </form>
+      <% else %>
+        <%= meal_item.name %>(<%= meal_item.serving_size %>): 
+        <%= meal_item.calories %>, <%= meal_item.protein %>
+
+        <a href="/meals/<%= @meal.id %>/items/<%= meal_item.id %>/edit">Edit</a>
+      <% end %>
     </li>
+
   <% end %>
 </ul>
 
@@ -27,7 +47,7 @@
 
   <select name="food_id" id="foods">
     <% @food_list.each do |food| %>
-      <option value="<%= food.id %>">
+      <option value=<%= food.id %> <%= 'selected' if food.id.to_s == params[:food_id] %>>
         <%= food.name %>
       </option>
     <% end %>

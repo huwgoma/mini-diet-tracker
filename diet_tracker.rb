@@ -99,7 +99,8 @@ post '/meals/:meal_id/delete' do
   redirect "/dashboard"
 end
 
-# Add a food item to a meal
+# # # # # # Meal Items # # # # # 
+# Add an item to a meal
 post '/meals/:meal_id/foods' do
   meal_id = params[:meal_id].to_i
   food_id = params[:food_id].to_i
@@ -107,15 +108,33 @@ post '/meals/:meal_id/foods' do
 
   session[:error] = meal_item_error(meal_id, food_id, serving_size)
 
-  unless session[:error]
-    # success message
-    @storage.create_meal_item(meal_id, food_id, serving_size)
-  end
+  if session[:error]
+    @meal = session.delete(:meal) || @storage.load_meal(params[:meal_id])
+    @meal.items = @storage.load_meal_items(params[:meal_id])
+    @food_list = @storage.load_foods
 
-  redirect "/meals/#{meal_id}"
+    erb :meal
+  else
+    @storage.create_meal_item(meal_id, food_id, serving_size)
+    session[:success] = "Food item added!"
+
+    redirect "/meals/#{meal_id}"
+  end
   # refactor how to select meal items into a search bar
 end
 
+# Edit a meal item
+get '/meals/:meal_id/items/:item_id/edit' do
+  @meal = session.delete(:meal) || @storage.load_meal(params[:meal_id])
+  @meal.items = @storage.load_meal_items(params[:meal_id])
+  @item_id = params[:item_id].to_i
+  
+  @food_list = @storage.load_foods
+
+  erb :meal
+  # Refactor meal items to additionally include meal_item_id
+  # render meal page, passing 
+end
 
 ##################
 # Helper Methods #
