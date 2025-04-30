@@ -1,4 +1,5 @@
 <h3><%= @meal.memo %></h3>
+
 <div>
   <a href="/meals/<%= @meal.id %>/edit">Edit</a>
 
@@ -6,55 +7,15 @@
     <button type="submit">Delete</button>
   </form>
 </div>
+
 <div>Logged at: <%= @meal.datetime %></div>
 
 <%# Totals %>
 <div>Totals: <%= @meal.calories %>, <%= @meal.protein %></div>
 
 <%# List of Meal Items %>
-<ul>
-  <% @meal.items.each do |meal_item| %>
-    <li>
-      <% if meal_item.id == @item_id %>
-        <form action="/meals/<%= @meal.id %>/items/<%= meal_item.id %>/edit" method="post">
-          <select name="food_id" id="foods">
-            <% @food_options.each do |food| %>
-              <option value="<%= food.id %>" <%= "selected" if meal_item.food_id == food.id %>>
-                <%= food.name %>
-              </option>
-            <% end %>
-          </select>
+<%== erb :meal_item_list %>
 
-          <input type="number" name="serving_size" id="serving_size" 
-            min="1" value=<%= meal_item.serving_size.to_i %>>
+<%# Add Meal Items %>
+<%== erb :meal_item_form %>
 
-          <button type="submit">Update</button>
-        </form>
-      <% else %>
-        <%= meal_item.name %>(<%= meal_item.serving_size %>): 
-        <%= meal_item.calories %>, <%= meal_item.protein %>
-
-        <a href="/meals/<%= @meal.id %>/items/<%= meal_item.id %>/edit">Edit</a>
-      <% end %>
-    </li>
-
-  <% end %>
-</ul>
-
-<%# Add a food %>
-<form action="/meals/<%= @meal.id %>/foods" method="post">
-  <label for="foods">Add a food item:</label>
-
-  <select name="food_id" id="foods">
-    <% @food_options.each do |food| %>
-      <option value=<%= food.id %> <%= 'selected' if food.id.to_s == params[:food_id] %>>
-        <%= food.name %>
-      </option>
-    <% end %>
-  </select>
-
-  <label for="serving_size">Serving Size (g):</label>
-  <input type="number" name="serving_size" id="serving_size" min="1">
-
-  <button type="Submit">Add</button>
-</form>

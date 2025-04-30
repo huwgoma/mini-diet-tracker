@@ -1,0 +1,16 @@
+<form action="/meals/<%= @meal.id %>/items" method="post">
+  <label for="foods">Add a food item:</label>
+
+  <select name="food_id" id="foods">
+    <% @food_options.each do |food| %>
+      <option value=<%= food.id %> <%= 'selected' if food.id == params[:food_id].to_s %>>
+        <%= food.name %>
+      </option>
+    <% end %>
+  </select>
+
+  <label for="serving_size">Serving Size (g):</label>
+  <input type="number" name="serving_size" id="serving_size" min="1">
+
+  <button type="Submit">Add</button>
+</form>

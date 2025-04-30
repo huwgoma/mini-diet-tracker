@@ -28,12 +28,18 @@ not_found do
   redirect '/dashboard'
 end
 
+helpers do
+  def now
+    DateTime.now.strftime('%Y-%m-%dT%H:%M')
+  end
+end
+
 # To Do: 
-# - Extract the loading of meal page data into a method
-#   (to load: meal*, meal items, food list)
-#   * 
+# 
 # - Extract/Refactor meal.erb view components
+# - Reconsider date formatting location
 # - Guard against nils
+# - Revisit concept of passing meals through session during redirects
 
 # Home Page - View all meals by date
 get '/dashboard' do
@@ -110,7 +116,7 @@ end
 
 # # # # # # Meal Items # # # # # 
 # Add an item to a meal
-post '/meals/:meal_id/foods' do
+post '/meals/:meal_id/items' do
   meal_id = params[:meal_id].to_i
   food_id = params[:food_id].to_i
   serving_size = params[:serving_size].to_i
