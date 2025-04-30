@@ -151,13 +151,9 @@ post '/meals/:meal_id/items/:item_id/edit' do
 
     erb :meal
   else
-    # @storage.update_meal_item(id, food_id, serving_size)
-    # redirect "/meals/#{meal_id}"
+    @storage.update_meal_item(item_id, food_id, serving_size)
+    redirect "/meals/#{meal_id}"
   end
-  # Validate the updated meal item data
-  # If error, re-render meal page (with item_id)
-  # If successful, make the update
-  # @storage.update_meal_item(id, meal_id, food_id, serving_size)
 end
 
 

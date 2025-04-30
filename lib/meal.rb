@@ -16,6 +16,8 @@ class Meal
   end
 
   # Extract to view helpers
+  # # 
+  # # 
   def datetime
     "#{date} #{time}"
   end

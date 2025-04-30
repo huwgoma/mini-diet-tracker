@@ -108,10 +108,19 @@ class DatabaseAdapter
     result.none?
   end 
 
+  # Create a new meal item
   def create_meal_item(meal_id, food_id, serving_size)
     sql = "INSERT INTO meal_items (meal_id, food_id, serving_size)
            VALUES($1, $2, $3)"
     query(sql, meal_id, food_id, serving_size)
+  end
+
+  # Update a meal item
+  def update_meal_item(id, food_id, serving_size)
+    sql = "UPDATE meal_items SET
+           food_id = $2, serving_size = $3
+           WHERE id = $1;"
+    query(sql, id, food_id, serving_size)
   end
 
   # Retrieve all foods 
