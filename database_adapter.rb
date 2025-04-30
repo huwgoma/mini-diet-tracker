@@ -114,11 +114,6 @@ class DatabaseAdapter
     query(sql, meal_id, food_id, serving_size)
   end
 
-
-
-
- 
-
   # Retrieve all foods 
   def load_foods
     sql = "SELECT * FROM foods;"
