@@ -95,17 +95,18 @@ class DatabaseAdapter
     # format_food 
   end
 
-  # # # # # # # Meal Items # # # # # 
-  # Query the existence of a meal_item record
-  def meal_item_exists?(meal_id, food_id)
-    sql = "SELECT EXISTS (
-            SELECT 1 FROM meal_items
-            WHERE meal_id = $1 AND food_id = $2
-          );"
-    result = query(sql, meal_id, food_id)
+  # # # # # # Meal Items # # # # # 
+  # Check whether a meal_item record is unique, based on meal_id and food_id.
+  # - If an id is given (ie. UPDATE), exclude any records with the same id.
+  # - If an id is not given (ie. INSERT), do not exclude any records based on id.
+  def unique_meal_item?(id: nil, meal_id: nil, food_id: nil)
+    sql = "SELECT 1 FROM meal_items
+           WHERE meal_id = $2 AND food_id = $3
+           AND ($1::integer IS NULL OR id <> $1);"
+    result = query(sql, id, meal_id, food_id)
 
-    result.first['exists'] == 't'
-  end
+    result.none?
+  end 
 
   def create_meal_item(meal_id, food_id, serving_size)
     sql = "INSERT INTO meal_items (meal_id, food_id, serving_size)

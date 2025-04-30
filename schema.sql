@@ -23,7 +23,8 @@ CREATE TABLE meal_items (
   id serial PRIMARY KEY,
   meal_id integer NOT NULL REFERENCES meals ON DELETE CASCADE,
   food_id integer NOT NULL REFERENCES foods ON DELETE CASCADE,
-  serving_size numeric(10, 2) CHECK(serving_size > 0) NOT NULL
+  serving_size numeric(10, 2) CHECK(serving_size > 0) NOT NULL,
+  UNIQUE(meal_id, food_id)
 );
 
 CREATE OR REPLACE FUNCTION ADJUST (
