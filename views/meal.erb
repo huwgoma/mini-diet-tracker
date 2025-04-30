@@ -18,7 +18,7 @@
       <% if meal_item.id == @item_id %>
         <form action="/meals/<%= @meal.id %>/items/<%= meal_item.id %>/edit" method="post">
           <select name="food_id" id="foods">
-            <% @food_list.each do |food| %>
+            <% @food_options.each do |food| %>
               <option value="<%= food.id %>" <%= "selected" if meal_item.food_id == food.id %>>
                 <%= food.name %>
               </option>
@@ -46,7 +46,7 @@
   <label for="foods">Add a food item:</label>
 
   <select name="food_id" id="foods">
-    <% @food_list.each do |food| %>
+    <% @food_options.each do |food| %>
       <option value=<%= food.id %> <%= 'selected' if food.id.to_s == params[:food_id] %>>
         <%= food.name %>
       </option>

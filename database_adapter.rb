@@ -16,7 +16,7 @@ class DatabaseAdapter
 
   # # # # # # # Meals # # # # # # #
   # Retrieve all meals by date
-  def load_meals(date)
+  def load_meals_by_date(date)
     sql = <<~SQL
       SELECT meals.id, meals.memo, meals.logged_at, 
         STRING_AGG(foods.name, ', ') AS meal_item_names,

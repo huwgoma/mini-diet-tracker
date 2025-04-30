@@ -28,23 +28,30 @@ not_found do
   redirect '/dashboard'
 end
 
-# Dashboard (Home Page)
+# To Do: 
+# - Extract the loading of meal page data into a method
+#   (to load: meal*, meal items, food list)
+#   * 
+# - Extract/Refactor meal.erb view components
+# - Guard against nils
+
+# Home Page - View all meals by date
 get '/dashboard' do
   @date = params[:date] || Date.today.to_s
-  @meals = @storage.load_meals(@date)
+  @meals = @storage.load_meals_by_date(@date)
 
   erb :home
 end
 
-# # # # # # Meals # # # # # 
-# Create a new meal
+# # # # # Meals # # # # # 
+# (Form): Create a new meal 
 get '/meals/new' do
   erb :new_meal
 end
 
+# Create a new meal
 post '/meals' do
   memo, logged_at = params[:memo], params[:logged_at]
-
   session[:error] = meal_insert_error(memo, logged_at)
 
   if session[:error]
@@ -56,29 +63,31 @@ post '/meals' do
   end
 end
 
-# View a specific meal
+# View an individual meal
 get '/meals/:meal_id' do
-  @meal = session.delete(:meal) || @storage.load_meal(params[:meal_id])
-  @meal.items = @storage.load_meal_items(params[:meal_id])
-
-  @food_list = @storage.load_foods
+  load_meal_page_data(params[:meal_id])
 
   erb :meal
 end
 
-# Edit an individual meal
+# (Form): Edit an individual meal
 get '/meals/:meal_id/edit' do
   @meal = @storage.load_meal(params[:meal_id])
-  @meal.items = @storage.load_meal_items(params[:meal_id])
 
   erb :edit_meal
 end
 
+# Update an individual meal
 post '/meals/:meal_id/edit' do
   meal_id = params[:meal_id].to_i
-  memo, logged_at = params[:memo], params[:logged_at]
+  
+  memo = params[:memo]
+  logged_at = params[:logged_at]
 
-  session[:error] = meal_update_error(memo, logged_at, meal_id)
+  # load meal regardless
+  # if successful, pass meal through session
+
+  session[:error] = meal_update_error(meal_id, memo, logged_at)
 
   if session[:error]
     @meal = @storage.load_meal(meal_id)
@@ -109,9 +118,7 @@ post '/meals/:meal_id/foods' do
   session[:error] = meal_item_error(meal_id, food_id, serving_size)
 
   if session[:error]
-    @meal = session.delete(:meal) || @storage.load_meal(params[:meal_id])
-    @meal.items = @storage.load_meal_items(params[:meal_id])
-    @food_list = @storage.load_foods
+    load_meal_page_data(params[:meal_id])
 
     erb :meal
   else
@@ -125,11 +132,8 @@ end
 
 # Edit a meal item
 get '/meals/:meal_id/items/:item_id/edit' do
-  @meal = session.delete(:meal) || @storage.load_meal(params[:meal_id])
-  @meal.items = @storage.load_meal_items(params[:meal_id])
   @item_id = params[:item_id].to_i
-  
-  @food_list = @storage.load_foods
+  load_meal_page_data(params[:meal_id])
 
   erb :meal
 end
@@ -143,11 +147,8 @@ post '/meals/:meal_id/items/:item_id/edit' do
   session[:error] = meal_item_update_error(item_id, meal_id, food_id, serving_size)
   
   if session[:error]
-    @meal = session.delete(:meal) || @storage.load_meal(params[:meal_id])
-    @meal.items = @storage.load_meal_items(params[:meal_id])
     @item_id = params[:item_id].to_i
-    
-    @food_list = @storage.load_foods
+    load_meal_page_data(params[:meal_id])
 
     erb :meal
   else
@@ -156,12 +157,21 @@ post '/meals/:meal_id/items/:item_id/edit' do
   end
 end
 
-
-
-
 ##################
 # Helper Methods #
 ##################
+
+# Load all data for an individual meal page.
+def load_meal_page_data(meal_id)
+  @meal = session.delete(:meal) || @storage.load_meal(meal_id)
+  @meal.items = @storage.load_meal_items(meal_id)
+  @food_options = load_food_options
+end
+
+def load_food_options
+  @storage.load_foods
+end
+
 # # Error Message Methods
 # Meals
 def meal_insert_error(memo, logged_at)
@@ -172,7 +182,7 @@ def meal_insert_error(memo, logged_at)
   end
 end
 
-def meal_update_error(memo, logged_at, meal_id)
+def meal_update_error(meal_id, memo, logged_at)
   meal_insert_error(memo, logged_at) || null_meal_error(meal_id)
 end
 
