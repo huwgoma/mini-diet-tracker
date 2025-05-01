@@ -107,7 +107,7 @@ post '/meals' do
 end
 
 # View an individual meal
-get '/meals/:meal_id' do
+get '/meals/:meal_id' do 
   load_meal_page_data(params[:meal_id])
 
   erb :meal
@@ -115,15 +115,14 @@ end
 
 # (Form): Edit an individual meal
 get '/meals/:meal_id/edit' do
-  @meal = @storage.load_meal(params[:meal_id])
-  
+  load_meal(params[:meal_id])
+
   erb :edit_meal
 end
 
 # Update an individual meal
 post '/meals/:meal_id/edit' do
   meal_id = params[:meal_id].to_i
-  
   memo = params[:memo]
   logged_at = params[:logged_at]
 
@@ -133,7 +132,7 @@ post '/meals/:meal_id/edit' do
   session[:error] = meal_update_error(meal_id, memo, logged_at)
 
   if session[:error]
-    @meal = @storage.load_meal(meal_id)
+    load_meal(meal_id)
 
     erb :edit_meal
   else
@@ -203,16 +202,29 @@ end
 ##################
 # Helper Methods #
 ##################
+def load_meal(meal_id)
+  @meal = session.delete(:meal) || @storage.load_meal(meal_id)
+  redirect_if_nil(@meal)
+
+  @meal
+end
 
 # Load all data for an individual meal page.
 def load_meal_page_data(meal_id)
-  @meal = session.delete(:meal) || @storage.load_meal(meal_id)
+  load_meal(meal_id)
   @meal.items = @storage.load_meal_items(meal_id)
   @food_options = load_food_options
 end
 
 def load_food_options
   @storage.load_foods
+end
+
+def redirect_if_nil(meal)
+  if meal.nil?
+    session[:error] = "That meal doesn't seem to exist."
+    redirect '/'
+  end
 end
 
 # # Error Message Methods
