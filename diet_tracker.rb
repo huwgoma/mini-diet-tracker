@@ -74,7 +74,10 @@ helpers do
 end
 
 # To Do:
-# - Fix edit meal memo bug when memo has a space
+# - Add cancel option to editing meal items
+# - Delete meal items
+# 
+# CRUD for foods database
 
 
 # Home Page - View all meals by date

@@ -3,22 +3,7 @@
     <li>
       <%# Display edit options for meal item %>
       <% if meal_item.id == @item_id %>
-        <form action="/meals/<%= @meal.id %>/items/<%= meal_item.id %>/edit" method="post">
-          <select name="food_id" id="foods">
-            <% selected_food_id = selected_food_id(params[:food_id], meal_item.food_id) %>
-            <% @food_options.each do |food| %>
-              <option value="<%= food.id %>" <%= 'selected' if food.id == selected_food_id %>>
-                <%= food.name %>
-              </option>
-            <% end %>
-          </select>
-
-          <input type="number" name="serving_size" id="serving_size" 
-            min="1" value=<%= meal_item.serving_size %>>
-
-          <button type="submit">Update</button>
-        </form>
-
+        <%== erb :edit_meal_item_form, locals: { meal_item: meal_item } %>
       <%# Display meal item normally %>
       <% else %>
         <%= meal_item.name %>
