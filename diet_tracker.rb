@@ -74,9 +74,8 @@ helpers do
 end
 
 # To Do:
-# - Guard against nils
-#   - 
-# - Revisit concept of passing meals through session during redirects
+# - Fix edit meal memo bug when memo has a space
+
 
 # Home Page - View all meals by date
 get '/dashboard' do
