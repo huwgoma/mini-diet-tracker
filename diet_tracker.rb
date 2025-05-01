@@ -210,7 +210,9 @@ end
 
 # # # # # Foods # # # # # 
 get '/foods' do
-  "Hello!"
+  @foods = @storage.load_foods
+  
+  erb :foods
 end
 
 ##################

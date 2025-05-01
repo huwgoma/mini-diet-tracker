@@ -1,0 +1,9 @@
+<h3>Food Database</h3>
+
+<ul>
+  <% @foods.each do |food| %>
+    <li>
+      <a href="/foods/<%= food.id %>"><%= food.name %></a>
+    </li>
+  <% end %>
+</ul>
