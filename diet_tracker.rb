@@ -74,9 +74,6 @@ helpers do
 end
 
 # To Do:
-# - Delete meal items
-# - Rename load_meal_items to load_meal_items_by_meal_id and rename all instances
-# 
 # CRUD for foods database
 
 
@@ -209,6 +206,11 @@ post '/meals/:meal_id/items/:item_id/delete' do
   session[:success] = "#{meal_item.name} successfully removed."
 
   redirect "meals/#{params[:meal_id]}"
+end
+
+# # # # # Foods # # # # # 
+get '/foods' do
+  "Hello!"
 end
 
 ##################
