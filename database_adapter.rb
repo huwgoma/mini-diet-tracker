@@ -1,5 +1,4 @@
 require 'pg'
-require 'date_core'
 
 class DatabaseAdapter
   attr_reader :db, :logger
@@ -62,11 +61,14 @@ class DatabaseAdapter
   end
 
   # Update existing meal
-  def update_meal(id, memo, logged_at)
+  def update_and_return_meal(id, memo, logged_at)
     sql = "UPDATE meals SET
            memo = $2, logged_at = $3
-           WHERE id = $1;"
-    query(sql, id, memo, logged_at)
+           WHERE id = $1
+           RETURNING *;"
+    result = query(sql, id, memo, logged_at)
+
+    format_meal(result.first)
   end
 
   def delete_meal(id)
@@ -143,7 +145,7 @@ class DatabaseAdapter
 
   def format_meal(meal)
     return if meal.nil?
-
+    
     id = meal['id'].to_i
     memo = meal['memo']
     logged_at = format_datetime(meal['logged_at'])
@@ -161,7 +163,7 @@ class DatabaseAdapter
 
   def format_meal_item(item)
     return if item.nil?
-
+    
     id = item['id'].to_i
     food_id = item['food_id'].to_i
     name = item['name']

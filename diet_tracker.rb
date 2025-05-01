@@ -2,7 +2,7 @@
 
 require 'sinatra'
 require 'sinatra/contrib'
-
+require 'date_core'
 require 'pry'
 
 require_relative 'database_adapter'
@@ -126,17 +126,14 @@ post '/meals/:meal_id/edit' do
   memo = params[:memo]
   logged_at = params[:logged_at]
 
-  # load meal regardless
-  # if successful, pass meal through session
-
   session[:error] = meal_update_error(meal_id, memo, logged_at)
 
   if session[:error]
-    load_meal(meal_id)
-
+    load_meal
     erb :edit_meal
   else
-    @storage.update_meal(meal_id, memo, logged_at)
+    @meal = @storage.update_and_return_meal(meal_id, memo, logged_at)
+    session[:meal] = @meal
     redirect "/meals/#{meal_id}"
   end
 end
