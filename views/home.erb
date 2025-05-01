@@ -8,7 +8,7 @@
 
 <div>
   <% if @meals.empty? %>
-    <p>Hmm...You don't have any meals recorded for this day.</p>
+    <p>Hmm...You don't have any meals recorded for <%= @date %>.</p>
   <% else %>
     <ul>
     <% @meals.each do |meal| %>
