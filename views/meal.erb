@@ -13,7 +13,8 @@
 </div>
 
 <%# Totals %>
-<div>Totals: <%= @meal.calories %>, <%= @meal.protein %></div>
+<div>Totals: <%= format_kcal(@meal.calories) %>,
+             <%= format_protein(@meal.protein) %></div>
 
 <%# List of Meal Items %>
 <%== erb :meal_item_list %>

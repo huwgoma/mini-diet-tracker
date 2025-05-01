@@ -1,9 +1,5 @@
-require_relative 'nutrition_formatter.rb'
-
 class Meal
-  include NutritionFormatter
-
-  attr_reader :id, :memo, :item_names, :items, :logged_at
+  attr_reader :id, :memo, :item_names, :items, :logged_at, :calories, :protein
 
   def initialize(id, memo, logged_at, calories, protein, item_names)
     @id = id
@@ -24,18 +20,12 @@ end
 
 # Meal Items
 class MealItem
-  include NutritionFormatter
-
-  attr_reader :id, :food_id, :name, :serving_size
+  attr_reader :id, :food_id, :name, :serving_size, :calories, :protein
 
   def initialize(id, food_id, name, serving_size, calories, protein)
     @id, @food_id = id, food_id
     @name = name
     @serving_size = serving_size
     @calories, @protein = calories, protein
-  end
-
-  def serving_size_display
-    grams(@serving_size)
   end
 end

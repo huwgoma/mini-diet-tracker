@@ -46,18 +46,34 @@ helpers do
 
   def format_time(datetime)
     # Hour:Minute
-    datetime.strftime('%l:%M%p')
+    datetime.strftime('%l:%M%p').strip
   end
 
   def now
     format_datetime_input(DateTime.now)
   end
+
+  # Nutrition Formatting
+  def format_kcal(calories)
+    "#{calories}kcal"
+  end
+
+  def format_protein(protein)
+    "#{format_grams(protein)} protein"
+  end
+
+  def format_grams(value)
+    "#{value}g"
+  end
+  # grams (protein)
+  # kcal (kcal)
 end
 
-# To Do: 
-
-# - Reconsider date formatting location
+# To Do:
+# - Fix bug where food selection is not saved when editing invalid meal item
+# - Reconsider where to store nutrition formatting? 
 # - Guard against nils
+#   - 
 # - Revisit concept of passing meals through session during redirects
 
 # Home Page - View all meals by date

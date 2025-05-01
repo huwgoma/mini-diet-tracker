@@ -14,8 +14,8 @@
       <li>
         <a href="/meals/<%= meal.id %>">
           <%= "#{meal.memo} (#{format_time(meal.logged_at)})" %>
-          <%= "#{meal.calories} | #{meal.protein}"%>
-          <%= meal.item_names %>
+          <%= "#{format_kcal(meal.calories)} | #{format_protein(meal.protein)}"%>
+          <%= "(#{meal.item_names})" %>
         </a>
       </li>
     <% end %>

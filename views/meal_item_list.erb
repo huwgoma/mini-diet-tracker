@@ -20,8 +20,10 @@
 
       <%# Display meal item normally %>
       <% else %>
-        <%= meal_item.name %>(<%= meal_item.serving_size %>): 
-        <%= meal_item.calories %>, <%= meal_item.protein %>
+        <%= meal_item.name %>
+        (<%= format_grams(meal_item.serving_size) %>): 
+        <%= format_kcal(meal_item.calories) %>, 
+        <%= format_protein(meal_item.protein) %>
 
         <a href="/meals/<%= @meal.id %>/items/<%= meal_item.id %>/edit">Edit</a>
       <% end %>
