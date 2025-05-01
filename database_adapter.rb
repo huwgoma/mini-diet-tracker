@@ -97,7 +97,7 @@ class DatabaseAdapter
   end 
 
   # Retrieve all meal items associated with the given meal ID
-  def load_meal_items(meal_id)
+  def load_meal_items_by_meal(meal_id)
     sql = "SELECT meal_items.id, foods.id AS food_id, foods.name, 
             meal_items.serving_size,
             ADJUST(calories, serving_size, standard_portion) AS item_calories,

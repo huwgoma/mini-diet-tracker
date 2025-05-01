@@ -224,7 +224,7 @@ end
 # Load all data for an individual meal page.
 def load_meal_page_data(meal_id)
   load_meal(meal_id)
-  @meal.items = @storage.load_meal_items(meal_id)
+  @meal.items = @storage.load_meal_items_by_meal(meal_id)
   @food_options = load_food_options
 end
 
