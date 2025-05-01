@@ -65,13 +65,15 @@ helpers do
   def format_grams(value)
     "#{value}g"
   end
-  # grams (protein)
-  # kcal (kcal)
+
+  # If a food option is selected (params[:food_id]), return that ID as an integer.
+  # Otherwise return the food ID of the current meal item.
+  def selected_food_id(params_food_id, meal_item_food_id)
+    params_food_id ? params_food_id.to_i : meal_item_food_id
+  end
 end
 
 # To Do:
-# - Fix bug where food selection is not saved when editing invalid meal item
-# - Reconsider where to store nutrition formatting? 
 # - Guard against nils
 #   - 
 # - Revisit concept of passing meals through session during redirects

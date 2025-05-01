@@ -3,7 +3,7 @@
 
   <select name="food_id" id="foods">
     <% @food_options.each do |food| %>
-      <option value=<%= food.id %> <%= 'selected' if food.id == params[:food_id].to_s %>>
+      <option value=<%= food.id %> <%= 'selected' if food.id == params[:food_id].to_i %>>
         <%= food.name %>
       </option>
     <% end %>
