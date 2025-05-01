@@ -29,14 +29,33 @@ not_found do
 end
 
 helpers do
+  # DateTime Formatting
+  def format_datetime(datetime)
+    "#{format_date(datetime)} #{format_time(datetime)}"  
+  end
+
+  def format_datetime_input(datetime)
+    time = datetime.strftime('%H:%M')
+    "#{format_date(datetime)}T#{time}"
+  end
+
+  def format_date(datetime)
+    # Year-Month-Day
+    datetime.strftime('%Y-%m-%d')
+  end
+
+  def format_time(datetime)
+    # Hour:Minute
+    datetime.strftime('%l:%M%p')
+  end
+
   def now
-    DateTime.now.strftime('%Y-%m-%dT%H:%M')
+    format_datetime_input(DateTime.now)
   end
 end
 
 # To Do: 
-# 
-# - Extract/Refactor meal.erb view components
+
 # - Reconsider date formatting location
 # - Guard against nils
 # - Revisit concept of passing meals through session during redirects
@@ -79,7 +98,7 @@ end
 # (Form): Edit an individual meal
 get '/meals/:meal_id/edit' do
   @meal = @storage.load_meal(params[:meal_id])
-
+  
   erb :edit_meal
 end
 
@@ -121,7 +140,7 @@ post '/meals/:meal_id/items' do
   food_id = params[:food_id].to_i
   serving_size = params[:serving_size].to_i
 
-  session[:error] = meal_item_error(meal_id, food_id, serving_size)
+  session[:error] = meal_item_insert_error(meal_id, food_id, serving_size)
 
   if session[:error]
     load_meal_page_data(params[:meal_id])
@@ -209,18 +228,18 @@ end
 # Meal Items
 def meal_item_insert_error(meal_id, food_id, serving_size)
   serving_size_error(serving_size) ||
-    meal_item_collision_error(meal_id, food_id) ||
+    meal_item_collision_error(meal_id: meal_id, food_id: food_id) ||
     null_meal_error(meal_id) ||
     null_food_error(food_id)
 end
 
 def meal_item_update_error(id, meal_id, new_food_id, new_serving_size)
   serving_size_error(new_serving_size) ||
-    meal_item_collision_error(id, meal_id, new_food_id) ||
+    meal_item_collision_error(id: id, meal_id: meal_id, food_id: new_food_id) ||
     null_food_error(new_food_id)
 end
 
-def meal_item_collision_error(id, meal_id, food_id)
+def meal_item_collision_error(id: nil, meal_id: nil, food_id: nil)
   unless @storage.unique_meal_item?(id: id, meal_id: meal_id, food_id: food_id)
     <<~HEREDOC
       You can't add the same food twice to the same meal.

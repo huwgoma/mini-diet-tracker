@@ -8,7 +8,9 @@
   </form>
 </div>
 
-<div>Logged at: <%= @meal.datetime %></div>
+<div>
+  Logged at: <%= format_datetime(@meal.logged_at) %>
+</div>
 
 <%# Totals %>
 <div>Totals: <%= @meal.calories %>, <%= @meal.protein %></div>

@@ -13,7 +13,7 @@
     <% @meals.each do |meal| %>
       <li>
         <a href="/meals/<%= meal.id %>">
-          <%= "#{meal.memo} (#{meal.datetime})" %>
+          <%= "#{meal.memo} (#{format_time(meal.logged_at)})" %>
           <%= "#{meal.calories} | #{meal.protein}"%>
           <%= meal.item_names %>
         </a>
