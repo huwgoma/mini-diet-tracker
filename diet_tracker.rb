@@ -74,8 +74,8 @@ helpers do
 end
 
 # To Do:
-# - Add cancel option to editing meal items
 # - Delete meal items
+# - Rename load_meal_items to load_meal_items_by_meal_id and rename all instances
 # 
 # CRUD for foods database
 
@@ -171,7 +171,7 @@ post '/meals/:meal_id/items' do
   # refactor how to select meal items into a search bar
 end
 
-# Edit a meal item
+# (Form) Edit a meal item
 get '/meals/:meal_id/items/:item_id/edit' do
   @item_id = params[:item_id].to_i
   load_meal_page_data(params[:meal_id])
@@ -179,6 +179,7 @@ get '/meals/:meal_id/items/:item_id/edit' do
   erb :meal
 end
 
+# Update a meal item
 post '/meals/:meal_id/items/:item_id/edit' do
   item_id = params[:item_id].to_i
   meal_id = params[:meal_id].to_i
@@ -196,6 +197,18 @@ post '/meals/:meal_id/items/:item_id/edit' do
     @storage.update_meal_item(item_id, food_id, serving_size)
     redirect "/meals/#{meal_id}"
   end
+end
+
+# Delete a meal item
+post '/meals/:meal_id/items/:item_id/delete' do
+  # Confirmation prompt via javascript
+  item_id = params[:item_id]
+
+  meal_item = @storage.load_meal_item(item_id)
+  @storage.delete_meal_item(item_id)
+  session[:success] = "#{meal_item.name} successfully removed."
+
+  redirect "meals/#{params[:meal_id]}"
 end
 
 ##################

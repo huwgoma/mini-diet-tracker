@@ -12,6 +12,10 @@
         <%= format_protein(meal_item.protein) %>
 
         <a href="/meals/<%= @meal.id %>/items/<%= meal_item.id %>/edit">Edit</a>
+
+        <form action="/meals/<%= @meal.id%>/items/<%= meal_item.id %>/delete" method="post">
+          <button type="submit">Delete</button>
+        </form>
       <% end %>
     </li>
   <% end %>

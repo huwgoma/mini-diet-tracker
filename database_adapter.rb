@@ -76,20 +76,6 @@ class DatabaseAdapter
     query(sql, id)
   end
 
-  # Retrieve all meal items associated with the given meal ID
-  def load_meal_items(meal_id)
-    sql = "SELECT meal_items.id, foods.id AS food_id, foods.name, 
-            meal_items.serving_size,
-            ADJUST(calories, serving_size, standard_portion) AS item_calories,
-            ADJUST(protein, serving_size, standard_portion) AS item_protein
-           FROM foods 
-           JOIN meal_items ON foods.id = food_id
-           WHERE meal_id = $1"
-    result = query(sql, meal_id)
-
-    result.map { |item| format_meal_item(item) }
-  end
-
   # # # # # # # Foods # # # # # # #
   def load_food(food_id)
     sql = "SELECT * FROM foods WHERE id = $1"
@@ -110,6 +96,34 @@ class DatabaseAdapter
     result.none?
   end 
 
+  # Retrieve all meal items associated with the given meal ID
+  def load_meal_items(meal_id)
+    sql = "SELECT meal_items.id, foods.id AS food_id, foods.name, 
+            meal_items.serving_size,
+            ADJUST(calories, serving_size, standard_portion) AS item_calories,
+            ADJUST(protein, serving_size, standard_portion) AS item_protein
+           FROM foods 
+           JOIN meal_items ON foods.id = food_id
+           WHERE meal_id = $1"
+    result = query(sql, meal_id)
+
+    result.map { |item| format_meal_item(item) }
+  end
+
+  # Retrieve a single meal item
+  def load_meal_item(id)
+    sql = "SELECT meal_items.id, foods.id AS food_id, foods.name,
+            meal_items.serving_size,
+            ADJUST(calories, serving_size, standard_portion) AS item_calories,
+            ADJUST(protein, serving_size, standard_portion) AS item_protein
+           FROM foods 
+           JOIN meal_items ON foods.id = food_id
+           WHERE meal_items.id = $1;"
+    result = query(sql, id)
+
+    format_meal_item(result.first)
+  end
+  
   # Create a new meal item
   def create_meal_item(meal_id, food_id, serving_size)
     sql = "INSERT INTO meal_items (meal_id, food_id, serving_size)
@@ -123,6 +137,13 @@ class DatabaseAdapter
            food_id = $2, serving_size = $3
            WHERE id = $1;"
     query(sql, id, food_id, serving_size)
+  end
+
+  # Delete a meal item
+  def delete_meal_item(id)
+    sql = "DELETE FROM meal_items
+           WHERE id = $1;"
+    query(sql, id)
   end
 
   # Retrieve all foods 
