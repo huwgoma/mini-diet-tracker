@@ -209,10 +209,19 @@ post '/meals/:meal_id/items/:item_id/delete' do
 end
 
 # # # # # Foods # # # # # 
+# View all foods
 get '/foods' do
+  # paginate
   @foods = @storage.load_foods
   
   erb :foods
+end
+
+# View a specific food
+get '/foods/:food_id' do
+  @food = @storage.load_food(params[:food_id])
+
+  erb :food
 end
 
 ##################

@@ -77,10 +77,20 @@ class DatabaseAdapter
   end
 
   # # # # # # # Foods # # # # # # #
-  def load_food(food_id)
-    sql = "SELECT * FROM foods WHERE id = $1"
-    query(sql, food_id)
-    # format_food 
+  # Retrieve all foods 
+  def load_foods
+    sql = "SELECT * FROM foods;"
+    result = query(sql)
+    
+    result.map { |food| format_food(food) }
+  end
+
+  # Retrieve a single food 
+  def load_food(id)
+    sql = "SELECT * FROM foods WHERE id = $1;"
+    result = query(sql, id)
+
+    format_food(result.first)
   end
 
   # # # # # # Meal Items # # # # # 
@@ -146,22 +156,6 @@ class DatabaseAdapter
     query(sql, id)
   end
 
-  # Retrieve all foods 
-  def load_foods
-    sql = "SELECT * FROM foods;"
-    result = query(sql)
-    
-    result.map { |food| format_food(food) }
-  end
-
-  # Retrieve a single food 
-  def find_food(id)
-    sql = "SELECT * FROM foods WHERE id = $1;"
-    result = query(sql, id)
-
-    format_food(result.first)
-  end
-
   private
 
   def format_meal(meal)
@@ -198,7 +192,10 @@ class DatabaseAdapter
   def format_food(food)
     id = food['id'].to_i
     name = food['name']
+    standard_portion = food['standard_portion'].to_i
+    calories = food['calories'].to_f
+    protein = food['protein'].to_f
 
-    Food.new(id, name)
+    Food.new(id, name, standard_portion, calories, protein)
   end
 end
