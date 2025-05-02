@@ -217,12 +217,24 @@ get '/foods' do
   erb :foods
 end
 
+# (Form): Add a new food
+get '/foods/new' do
+  erb :new_food
+end
+
+# Add a new food
+post '/foods' do
+  
+end
+
 # View a specific food
 get '/foods/:food_id' do
   @food = @storage.load_food(params[:food_id])
 
   erb :food
 end
+
+
 
 ##################
 # Helper Methods #
