@@ -102,6 +102,15 @@ class DatabaseAdapter
     result.none?
   end
 
+  def create_and_return_food(name, standard_portion, calories, protein)
+    sql = "INSERT INTO foods (name, standard_portion, calories, protein)
+           VALUES($1, $2, $3, $4)
+           RETURNING *;"
+    result = query(sql, name, standard_portion, calories, protein)
+
+    format_food(result.first)
+  end
+
   # # # # # # Meal Items # # # # # 
   # Check whether a meal_item record is unique, based on meal_id and food_id.
   # - If an id is given (ie. UPDATE), exclude any records with the same id.

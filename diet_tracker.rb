@@ -234,20 +234,11 @@ post '/foods/new' do
   if session[:error]
     erb :new_food
   else
-
+    food = @storage.create_and_return_food(name, standard_portion, calories, protein)
+    session[:success] = "Successfully added #{food.name} to the database!"
+    
+    redirect "/foods/#{food.id}"
   end
-  #binding.pry
-  # Validate the food
-  # - name not null and is unique
-  # - standard portion - greater than 1, less than 10000000.00
-  # - calories/protein - not null, greater than 1 less than 10000000.00
-  
-  # If there is an error, re-render new_food
-  # - Maintain all submitted values
-  # If no error, insert the new food
-  # - return the food from the INSERT operation (to get its ID)
-  # - then redirect to the newly created food page.
-  # 
 end
 
 # View a specific food
