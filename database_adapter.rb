@@ -94,10 +94,9 @@ class DatabaseAdapter
   end
 
   def unique_food_name?(name)
-    # case insensitize
     sql = "SELECT 1 FROM foods
-           WHERE name = $1;"
-    result = query(sql, name)
+           WHERE LOWER(name) = $1;"
+    result = query(sql, name.downcase)
 
     result.none?
   end
