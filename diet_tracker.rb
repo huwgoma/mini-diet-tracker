@@ -223,7 +223,8 @@ get '/foods/new' do
 end
 
 # Add a new food
-post '/foods/new' do
+post '/foods' do
+  binding.pry
   name = params[:name]
   standard_portion = params[:standard_portion].to_f
   calories = params[:calories].to_f
@@ -241,12 +242,16 @@ post '/foods/new' do
   end
 end
 
+
 # View a specific food
 get '/foods/:food_id' do
   @food = @storage.load_food(params[:food_id])
 
   erb :food
 end
+
+
+
 
 
 
