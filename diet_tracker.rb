@@ -242,6 +242,9 @@ post '/foods' do
   end
 end
 
+#
+# load_food(food_id)
+# - guard against nils (if db returns no records)
 
 # View a specific food
 get '/foods/:food_id' do
@@ -250,6 +253,30 @@ get '/foods/:food_id' do
   erb :food
 end
 
+# (Form): Edit a specific food
+get '/foods/:food_id/edit' do
+  @food = @storage.load_food(params[:food_id])
+  
+  erb :edit_food
+end
+
+# Update a specific food item
+post '/foods/:food_id/edit' do
+  session[:error] = food_update_error
+  # validate 
+  # - same rules as creating food 
+  # - additionally make sure the new name doesn't cause any collisions
+  # if error
+  # - rerender edit food form
+  # If valid
+  # - update
+  # - redirect to food page
+end
+
+
+# commit 
+# - add edit link to food page
+# - create view for editing individual food item
 
 
 

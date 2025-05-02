@@ -1,5 +1,7 @@
 <h3><%= @food.name %></h3>
 
+<a href="/foods/<%= @food.id %>/edit">Edit</a>
+
 <p>Standard Serving Size: <%= @food.standard_portion %></p>
 <p>Calories: <%= format_kcal(@food.calories) %> </p>
 <p>Protein: <%= format_protein(@food.protein) %></p>
