@@ -93,6 +93,14 @@ class DatabaseAdapter
     format_food(result.first)
   end
 
+  def unique_food_name?(name)
+    sql = "SELECT 1 FROM foods
+           WHERE name = $1;"
+    result = query(sql, name)
+
+    result.none?
+  end
+
   # # # # # # Meal Items # # # # # 
   # Check whether a meal_item record is unique, based on meal_id and food_id.
   # - If an id is given (ie. UPDATE), exclude any records with the same id.

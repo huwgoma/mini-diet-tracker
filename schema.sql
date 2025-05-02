@@ -13,8 +13,8 @@ CREATE TABLE meals (
 
 CREATE TABLE foods (
   id serial PRIMARY KEY, 
-  name varchar(255) NOT NULL,
-  standard_portion numeric(10, 2) NOT NULL DEFAULT 100, -- grams
+  name varchar(255) NOT NULL UNIQUE,
+  standard_portion numeric(10, 2) CHECK(standard_portion > 0) NOT NULL DEFAULT 100, -- grams
   calories numeric(10, 2) CHECK(calories > 0) NOT NULL,
   protein numeric(10, 2) CHECK(protein > 0) NOT NULL
 );

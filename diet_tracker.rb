@@ -75,7 +75,7 @@ end
 
 # To Do:
 # CRUD for foods database
-
+# /new for creating new meals/meal_items
 
 # Home Page - View all meals by date
 get '/dashboard' do
@@ -223,8 +223,26 @@ get '/foods/new' do
 end
 
 # Add a new food
-post '/foods' do
+post '/foods/new' do
+  name = params[:name]
+  standard_portion = params[:standard_portion].to_f
+  calories = params[:calories].to_f
+  protein = params[:protein].to_f
+
+  session[:error] = food_insert_error(name, standard_portion, calories, protein)
+
+  binding.pry
+  # Validate the food
+  # - name not null and is unique
+  # - standard portion - greater than 1, less than 10000000.00
+  # - calories/protein - not null, greater than 1 less than 10000000.00
   
+  # If there is an error, re-render new_food
+  # - Maintain all submitted values
+  # If no error, insert the new food
+  # - return the food from the INSERT operation (to get its ID)
+  # - then redirect to the newly created food page.
+  # 
 end
 
 # View a specific food
@@ -265,11 +283,28 @@ def redirect_if_nil(meal)
 end
 
 # # Error Message Methods
+# Generic
+def range_error(attr_name, value, min: nil, max: nil)
+  error_message = "#{attr_name} must be #{range_error_descriptor(min: min, max: max)}."
+  
+  error_message unless (min..max).cover?(value)
+end
+
+def range_error_descriptor(min: nil, max: nil)
+  if min && max
+    "between #{min} and #{max}"
+  elsif min
+    "greater than #{min}"
+  elsif max
+    "less than #{max}"
+  end
+end
+
 # Meals
 def meal_insert_error(memo, logged_at)
-  if memo.strip.empty?
+  if empty?(memo)
     'Memo (description) cannot be empty.'
-  elsif logged_at.strip.empty?
+  elsif empty?(logged_at)
     'You must provide a date and time for this meal.'
   end
 end
@@ -283,6 +318,16 @@ def null_meal_error(meal_id)
 end
 
 # Food
+def food_insert_error(name, standard_portion, calories, protein)
+  ten_digit_max = 99999999.99
+
+  ('Name cannot be empty.' if empty?(name)) ||
+    food_collision_error(name) ||
+    range_error('Standard Portion', standard_portion, min: 1, max: ten_digit_max) ||
+    range_error('Calories', calories, min: 1, max: ten_digit_max) ||
+    range_error('Protein', protein, min: 1, max: ten_digit_max)
+end
+
 def null_food_error(food_id)
   if food_is_null?(food_id)
     <<~HEREDOC
@@ -291,6 +336,11 @@ def null_food_error(food_id)
     HEREDOC
   end
 end
+
+def food_collision_error(name)
+  'Seems like that food already exists in the database.' unless @storage.unique_food_name?(name)
+end
+
 
 # Meal Items
 def meal_item_insert_error(meal_id, food_id, serving_size)
@@ -320,6 +370,10 @@ def serving_size_error(serving_size)
 end
 
 # Validation Condition Methods
+def empty?(str)
+  str.strip.empty?
+end
+
 def meal_exists?(meal_id)
   !!@storage.load_meal(meal_id)  
 end
