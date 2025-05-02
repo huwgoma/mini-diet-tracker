@@ -1,24 +1,27 @@
 <form action="" method="post">
   <h3>Enter a new food into the database:</h3>
-  <%# name, standard portion, calories per standard, protein per standard %>
   <div>
     <label for="name">Food Name:</label>
-    <input type="text" name="name" id="name" value=<% params[:name] %>>
+    <input type="text" name="name" id="name" 
+      value=<%= params[:name] %>>
   </div>
   
   <div>
     <label for="standard_portion">Standard Portion (g):</label>
-    <input type="number" name="standard_portion" id="standard_portion" min="1" value="100">
+    <input type="number" name="standard_portion" id="standard_portion" min="1" 
+      value=<%= params[:standard_portion] || 100 %>>
   </div>
   
   <div>
     <label for="calories">Calories (per Standard Portion):</label>
-    <input type="number" name="calories" id="calories" min="1">
+    <input type="number" name="calories" id="calories" min="1"
+      value=<%= params[:calories] %>>
   </div>
 
   <div>
     <label for="protein">Protein (per Standard Portion):</label>
-    <input type="number" name="protein" id="protein" min="1">
+    <input type="number" name="protein" id="protein" min="1"
+      value=<%= params[:protein] %>>
   </div>
   
   <button type="submit">Submit</button>

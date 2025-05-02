@@ -231,7 +231,12 @@ post '/foods/new' do
 
   session[:error] = food_insert_error(name, standard_portion, calories, protein)
 
-  binding.pry
+  if session[:error]
+    erb :new_food
+  else
+
+  end
+  #binding.pry
   # Validate the food
   # - name not null and is unique
   # - standard portion - greater than 1, less than 10000000.00
@@ -337,8 +342,10 @@ def null_food_error(food_id)
   end
 end
 
-def food_collision_error(name)
-  'Seems like that food already exists in the database.' unless @storage.unique_food_name?(name)
+def food_collision_error(name) 
+  unless @storage.unique_food_name?(name)
+    "There is already another item named #{name} in the database."
+  end
 end
 
 
