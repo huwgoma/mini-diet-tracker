@@ -123,6 +123,12 @@ class DatabaseAdapter
     query(sql, id, name, standard_portion, calories, protein)
   end
 
+  def delete_food(id)
+    sql = "DELETE FROM foods
+           WHERE id = $1;"
+    query(sql, id)
+  end
+
   # # # # # # Meal Items # # # # # 
   # Check whether a meal_item record is unique, based on meal_id and food_id.
   # - If an id is given (ie. UPDATE), exclude any records with the same id.

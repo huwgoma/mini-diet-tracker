@@ -275,7 +275,13 @@ end
 
 # Delete a food item
 post '/foods/:food_id/delete' do
-  "Hello"
+  # Confirmation Prompt via JS
+  food_id = params[:food_id].to_i
+  load_food(food_id)
+
+  @storage.delete_food(food_id)
+  session[:success] = "Successfully removed #{@food.name} from the database."
+  redirect '/foods'
 end
 
 ##################
