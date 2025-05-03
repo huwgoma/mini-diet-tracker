@@ -273,6 +273,11 @@ post '/foods/:food_id/edit' do
   end
 end
 
+# Delete a food item
+post '/foods/:food_id/delete' do
+  "Hello"
+end
+
 ##################
 # Helper Methods #
 ##################
