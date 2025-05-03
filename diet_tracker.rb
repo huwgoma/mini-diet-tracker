@@ -262,7 +262,23 @@ end
 
 # Update a specific food item
 post '/foods/:food_id/edit' do
-  session[:error] = food_update_error
+  food_id = params[:food_id].to_i
+  name = params[:name]
+  standard_portion = params[:standard_portion].to_i
+  calories, protein = params[:calories].to_i, params[:protein].to_i
+
+
+  session[:error] = food_update_error(food_id, name, standard_portion, calories, protein)
+  
+  if session[:error]
+    @food = @storage.load_food(food_id)
+    
+    erb :edit_food
+  else
+    @storage.update_food(food_id, name, standard_portion, calories, protein)
+    session[:success] = 'Food successfully updated.'
+    redirect "/foods/#{food_id}"
+  end
   # validate 
   # - same rules as creating food 
   # - additionally make sure the new name doesn't cause any collisions
@@ -273,10 +289,9 @@ post '/foods/:food_id/edit' do
   # - redirect to food page
 end
 
-
-# commit 
-# - add edit link to food page
-# - create view for editing individual food item
+def food_update_error(id, name, standard_portion, calories, protein)
+  food_insert_error(name, standard_portion, calories, protein, id)
+end
 
 
 
@@ -302,6 +317,7 @@ end
 def load_food_options
   @storage.load_foods
 end
+
 
 def redirect_if_nil(meal)
   if meal.nil?
@@ -346,11 +362,11 @@ def null_meal_error(meal_id)
 end
 
 # Food
-def food_insert_error(name, standard_portion, calories, protein)
+def food_insert_error(name, standard_portion, calories, protein, id=nil)
   ten_digit_max = 99999999.99
 
   ('Name cannot be empty.' if empty?(name)) ||
-    food_collision_error(name) ||
+    food_collision_error(name, id) ||
     range_error('Standard Portion', standard_portion, min: 1, max: ten_digit_max) ||
     range_error('Calories', calories, min: 1, max: ten_digit_max) ||
     range_error('Protein', protein, min: 1, max: ten_digit_max)
@@ -365,12 +381,11 @@ def null_food_error(food_id)
   end
 end
 
-def food_collision_error(name) 
-  unless @storage.unique_food_name?(name)
+def food_collision_error(name, id = nil)
+  unless @storage.unique_food_name?(name, id)
     "There is already another item named #{name} in the database."
   end
 end
-
 
 # Meal Items
 def meal_item_insert_error(meal_id, food_id, serving_size)

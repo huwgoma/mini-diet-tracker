@@ -1,6 +1,6 @@
 <%# Form for editing a food entry %>
 <form action="/foods/<%= @food.id %>/edit" method="post">
-  <h3>Editing <%= @food.id %>:</h3>
+  <h3>Editing Food Item #<%= @food.id %> (<%= @food.name %>):</h3>
   <div>
     <label for="name">Food Name:</label>
     <input type="text" name="name" id="name" 

@@ -93,14 +93,18 @@ class DatabaseAdapter
     format_food(result.first)
   end
 
-  def unique_food_name?(name)
+  # Query whether there is ANOTHER record in foods with the same name
+  # - If ID is given, ignore any records with the given ID.
+  def unique_food_name?(name, id = nil)
     sql = "SELECT 1 FROM foods
-           WHERE LOWER(name) = $1;"
-    result = query(sql, name.downcase)
+           WHERE LOWER(name) = $1 
+           AND ($2::integer IS NULL OR id <> $2);"
+    result = query(sql, name.downcase, id)
 
     result.none?
   end
 
+  # Insert a new record into foods and return the resulting record
   def create_and_return_food(name, standard_portion, calories, protein)
     sql = "INSERT INTO foods (name, standard_portion, calories, protein)
            VALUES($1, $2, $3, $4)
@@ -108,6 +112,15 @@ class DatabaseAdapter
     result = query(sql, name, standard_portion, calories, protein)
 
     format_food(result.first)
+  end
+
+  # Update a food 
+  def update_food(id, name, standard_portion, calories, protein)
+    sql = "UPDATE foods SET
+           name = $2, standard_portion = $3, 
+           calories = $4, protein = $5
+           WHERE id = $1;"
+    query(sql, id, name, standard_portion, calories, protein)
   end
 
   # # # # # # Meal Items # # # # # 
