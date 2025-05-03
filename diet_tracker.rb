@@ -3,7 +3,6 @@
 require 'sinatra'
 require 'sinatra/contrib'
 require 'date_core'
-require 'pry'
 
 require_relative 'database_adapter'
 Dir.glob('lib/*.rb').each { |file| require_relative file }
@@ -16,6 +15,7 @@ configure do
 end
 
 configure(:development) do
+  require 'pry'
   require 'sinatra/reloader'
   also_reload 'database_adapter.rb', 'lib/*.rb'
 end
@@ -72,10 +72,6 @@ helpers do
     params_food_id ? params_food_id.to_i : meal_item_food_id
   end
 end
-
-# To Do:
-# CRUD for foods database
-# /new for creating new meals/meal_items
 
 # Home Page - View all meals by date
 get '/dashboard' do
