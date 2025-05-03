@@ -8,19 +8,20 @@
   
   <div>
     <label for="standard_portion">Standard Portion (g):</label>
-    <input type="number" name="standard_portion" id="standard_portion" min="1" 
+    <input type="number" name="standard_portion" id="standard_portion" 
+      min="0.01" step="0.01" 
       value=<%= params[:standard_portion] || 100 %>>
   </div>
   
   <div>
     <label for="calories">Calories (per Standard Portion):</label>
-    <input type="number" name="calories" id="calories" min="1" step="0.01"
+    <input type="number" name="calories" id="calories" min="0" step="0.01"
       value=<%= params[:calories] %>>
   </div>
 
   <div>
     <label for="protein">Protein (per Standard Portion):</label>
-    <input type="number" name="protein" id="protein" min="1" step="0.01"
+    <input type="number" name="protein" id="protein" min="0" step="0.01"
       value=<%= params[:protein] %>>
   </div>
   
