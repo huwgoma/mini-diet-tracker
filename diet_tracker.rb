@@ -75,7 +75,6 @@ end
 
 # To Do:
 # CRUD for foods database
-# - Revisit min/max constraints
 # /new for creating new meals/meal_items
 
 # Home Page - View all meals by date
@@ -241,20 +240,16 @@ post '/foods' do
   end
 end
 
-#
-# load_food(food_id)
-# - guard against nils (if db returns no records)
-
 # View a specific food
 get '/foods/:food_id' do
-  @food = @storage.load_food(params[:food_id])
+  load_food(params[:food_id])
 
   erb :food
 end
 
 # (Form): Edit a specific food
 get '/foods/:food_id/edit' do
-  @food = @storage.load_food(params[:food_id])
+  load_food(params[:food_id])
   
   erb :edit_food
 end
@@ -269,7 +264,7 @@ post '/foods/:food_id/edit' do
   session[:error] = food_update_error(food_id, name, standard_portion, calories, protein)
   
   if session[:error]
-    @food = @storage.load_food(food_id)
+    load_food(food_id)
     erb :edit_food
   else
     @storage.update_food(food_id, name, standard_portion, calories, protein)
@@ -281,9 +276,11 @@ end
 ##################
 # Helper Methods #
 ##################
+
+# Loading Methods
 def load_meal(meal_id)
   @meal = session.delete(:meal) || @storage.load_meal(meal_id)
-  redirect_if_nil(@meal)
+  redirect_if_nil(@meal, 'meal', '/')
 
   @meal
 end
@@ -299,16 +296,22 @@ def load_food_options
   @storage.load_foods
 end
 
+def load_food(id)
+  @food = @storage.load_food(id)
+  redirect_if_nil(@food, 'food', '/foods')
 
-def redirect_if_nil(meal)
-  if meal.nil?
-    session[:error] = "That meal doesn't seem to exist."
-    redirect '/'
+  @food
+end
+
+# # Error Methods
+# Generic
+def redirect_if_nil(obj, obj_type, path)
+  if obj.nil?
+    session[:error] = "That #{obj_type} doesn't seem to exist."
+    redirect path
   end
 end
 
-# # Error Message Methods
-# Generic
 def range_error(attr_name, value, min: nil, max: nil)
   error_message = "#{attr_name} must be #{range_error_descriptor(min: min, max: max)}."
   

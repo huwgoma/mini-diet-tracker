@@ -220,6 +220,8 @@ class DatabaseAdapter
   end
 
   def format_food(food)
+    return if food.nil?
+    
     id = food['id'].to_i
     name = food['name']
     standard_portion = food['standard_portion'].to_i
